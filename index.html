@@ -13,12 +13,236 @@
             --text-main: #1e293b;
             --text-muted: #64748b;
             --card-bg: #ffffff;
+            --border-color: #e2e8f0;
+            --tag-bg-0: #e0f2fe;
+            --tag-text-0: #0369a1;
+            --tag-bg-1: #f0fdf4;
+            --tag-text-1: #15803d;
+            --tag-bg-2: #fef3c7;
+            --tag-text-2: #b45309;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: "PingFang SC", "Microsoft YaHei", sans-serif; background: var(--bg-body); color: var(--text-main); display: flex; min-height: 100vh; }
+        body { font-family: "PingFang SC", "Microsoft YaHei", sans-serif; background: var(--bg-body); color: var(--text-main); }
 
-        /* 侧边栏样式 */
+        /* ========== 顶部工具栏 ========== */
+        .top-bar {
+            position: fixed;
+            top: 0;
+            left: 280px;
+            right: 0;
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+            padding: 16px 40px;
+            z-index: 50;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .top-row {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .search-box {
+            flex: 1;
+            max-width: 400px;
+            position: relative;
+        }
+        .search-box input {
+            width: 100%;
+            padding: 10px 16px 10px 42px;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-family: inherit;
+            background: var(--bg-body);
+            color: var(--text-main);
+            transition: all 0.2s;
+        }
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: var(--card-bg);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+        .search-box input::placeholder { color: var(--text-muted); }
+        .search-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            pointer-events: none;
+        }
+        .search-clear {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+            display: none;
+            font-size: 1.2rem;
+            line-height: 1;
+        }
+        .search-clear:hover { background: var(--bg-body); color: var(--text-main); }
+        .search-box.has-value .search-clear { display: block; }
+
+        .stats-bar {
+            display: flex;
+            gap: 20px;
+            margin-left: auto;
+        }
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+        .stat-item .stat-num {
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 1.1rem;
+        }
+
+        .filter-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .filter-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+        .filter-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .filter-tag {
+            padding: 5px 12px;
+            border-radius: 16px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: var(--bg-body);
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+        }
+        .filter-tag:hover {
+            background: var(--card-bg);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        .filter-tag.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: #fff;
+        }
+        .filter-tag .count {
+            margin-left: 4px;
+            opacity: 0.7;
+            font-size: 0.75rem;
+        }
+        .filter-clear {
+            padding: 5px 12px;
+            border-radius: 16px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            background: none;
+            border: 1px dashed var(--border-color);
+            color: var(--text-muted);
+            display: none;
+        }
+        .filter-clear.visible { display: block; }
+        .filter-clear:hover { border-color: var(--primary); color: var(--primary); }
+
+        /* AND/OR 切换 */
+        .filter-mode-toggle {
+            display: flex;
+            background: var(--bg-body);
+            border-radius: 8px;
+            padding: 3px;
+            border: 1px solid var(--border-color);
+        }
+        .filter-mode-btn {
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            background: none;
+            color: var(--text-muted);
+            transition: all 0.2s;
+        }
+        .filter-mode-btn.active {
+            background: var(--card-bg);
+            color: var(--primary);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .filter-mode-btn:hover:not(.active) {
+            color: var(--text-main);
+        }
+
+        /* 筛选结果区域 */
+        .filter-results {
+            display: none;
+            padding: 40px;
+            background: var(--bg-body);
+            animation: fadeIn 0.3s ease;
+        }
+        .filter-results.active {
+            display: block;
+        }
+        .filter-results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .filter-results-header h2 {
+            font-size: 1.4rem;
+            color: #0f172a;
+        }
+        .filter-results-header h2 span {
+            color: var(--primary);
+            font-family: 'Consolas', monospace;
+        }
+        .back-to-sections {
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            transition: all 0.2s;
+        }
+        .back-to-sections:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        .filter-results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        /* ========== 侧边栏 ========== */
         .sidebar {
             width: 280px;
             background: var(--sidebar-bg);
@@ -46,13 +270,13 @@
             font-size: 0.95rem;
             color: #cbd5e1;
             border-left: 4px solid transparent;
+            text-decoration: none;
         }
         .nav-item:hover { background: #1e293b; color: #fff; }
         .nav-item.active {
             background: #1e293b;
             color: #fff;
             border-left-color: var(--primary);
-            background: linear-gradient(90deg, #1e293b 0%, #0f172a 100%);
         }
         .nav-item .step-num {
             margin-right: 12px;
@@ -64,21 +288,65 @@
             padding: 15px 25px;
             border-top: 1px solid #1e293b;
             text-align: center;
-            font-size: 1rem;
+            font-size: 0.85rem;
             color: #64748b;
+            line-height: 1.6;
         }
 
-        /* 主内容区 */
+        /* ========== 主内容区（长滚动） ========== */
         .main-content {
             margin-left: 280px;
-            flex-grow: 1;
-            padding: 40px;
-            width: calc(100% - 280px);
+            padding-top: 140px;
         }
 
-        .content-header { margin-bottom: 30px; }
-        .content-header h2 { font-size: 1.8rem; margin-bottom: 10px; color: #0f172a; }
-        .content-header p { color: var(--text-muted); line-height: 1.6; }
+        .section {
+            padding: 40px;
+            border-bottom: 1px solid var(--border-color);
+            background: var(--bg-body);
+        }
+        .section:last-child {
+            border-bottom: none;
+        }
+
+        .section-header {
+            margin-bottom: 30px;
+        }
+        .section-header h2 {
+            font-size: 1.6rem;
+            margin-bottom: 8px;
+            color: #0f172a;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .section-header h2 .section-num {
+            font-size: 0.9rem;
+            font-family: 'Consolas', monospace;
+            color: var(--text-muted);
+            font-weight: normal;
+        }
+        .section-header p {
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+        .section-header .tool-count {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-top: 8px;
+        }
+        .section-header .tool-count span {
+            color: var(--primary);
+            font-weight: 600;
+        }
+        .section-header .hidden-note {
+            display: none;
+            color: #f59e0b;
+            font-size: 0.85rem;
+            margin-top: 8px;
+        }
+        .section.hidden-note-active .hidden-note {
+            display: block;
+        }
 
         /* 工具卡片网格 */
         .tool-grid {
@@ -86,12 +354,6 @@
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 25px;
             animation: fadeIn 0.5s ease;
-        }
-
-        @media (max-width: 640px) {
-            .tool-grid {
-                grid-template-columns: 1fr;
-            }
         }
 
         @keyframes fadeIn {
@@ -107,26 +369,29 @@
             transition: all 0.3s;
             display: flex;
             flex-direction: column;
-            border: 1px solid #e2e8f0;
+            border: 1px solid var(--border-color);
         }
         .tool-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
             border-color: #bfdbfe;
         }
+        .tool-card.hidden { display: none; }
 
-        .tag-row { display: flex; gap: 8px; margin-bottom: 15px; }
+        .tag-row { display: flex; gap: 8px; margin-bottom: 15px; flex-wrap: wrap; }
         .tag {
             font-size: 0.75rem;
             padding: 4px 10px;
             border-radius: 20px;
             font-weight: 500;
         }
-        .tag-color-0 { background: #e0f2fe; color: #0369a1; }
-        .tag-color-1 { background: #f0fdf4; color: #15803d; }
-        .tag-color-2 { background: #fef3c7; color: #b45309; }
+        .tag-color-0 { background: var(--tag-bg-0); color: var(--tag-text-0); }
+        .tag-color-1 { background: var(--tag-bg-1); color: var(--tag-text-1); }
+        .tag-color-2 { background: var(--tag-bg-2); color: var(--tag-text-2); }
 
-        .tool-name { font-size: 1.25rem; font-weight: 700; margin-bottom: 12px; color: #1e293b; }
+        .tool-name { font-size: 1.2rem; font-weight: 700; margin-bottom: 12px; color: #1e293b; }
+        .tool-name .highlight { background: #fef08a; padding: 0 2px; border-radius: 2px; }
+
         .tool-desc {
             font-size: 0.9rem;
             color: var(--text-muted);
@@ -134,6 +399,7 @@
             margin-bottom: 20px;
             flex-grow: 1;
         }
+        .tool-desc .highlight { background: #fef08a; padding: 0 2px; border-radius: 2px; }
 
         .action-btn {
             text-decoration: none;
@@ -145,7 +411,8 @@
             font-weight: 600;
             font-size: 0.9rem;
             transition: 0.2s;
-            border: 1px solid #e2e8f0;
+            border: 1px solid var(--border-color);
+            display: inline-block;
         }
         .action-btn:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
         .modal-btn { cursor: pointer; border: none; font-family: inherit; }
@@ -161,7 +428,7 @@
             text-align: center;
         }
 
-        /* 弹窗样式 */
+        /* ========== 弹窗 ========== */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -194,7 +461,7 @@
             justify-content: space-between;
             align-items: center;
             padding: 20px 24px;
-            border-bottom: 1px solid #e2e8f0;
+            border-bottom: 1px solid var(--border-color);
         }
         .modal-header h3 { font-size: 1.3rem; color: #0f172a; }
         .modal-close {
@@ -218,24 +485,13 @@
             overflow-y: auto;
             max-height: calc(80vh - 80px);
         }
-        .modal-tags { margin-bottom: 20px; }
-        .modal-prompt h4 {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            margin-bottom: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        .modal-prompt {
-            position: relative;
-        }
         .modal-prompt-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 12px;
         }
-        .modal-prompt h4 {
+        .modal-prompt-header h4 {
             font-size: 0.9rem;
             color: var(--text-muted);
             text-transform: uppercase;
@@ -256,12 +512,10 @@
             gap: 4px;
         }
         .copy-btn:hover { background: var(--primary-hover); }
-        .copy-btn.copied {
-            background: #10b981;
-        }
+        .copy-btn.copied { background: #10b981; }
         .modal-prompt pre {
             background: #f8fafc;
-            border: 1px solid #e2e8f0;
+            border: 1px solid var(--border-color);
             border-radius: 12px;
             padding: 20px;
             font-family: 'Consolas', 'Monaco', monospace;
@@ -275,267 +529,851 @@
             margin: 0;
         }
 
-        /* 响应式 */
+        /* ========== 响应式 ========== */
         @media (max-width: 768px) {
             .sidebar { width: 70px; }
             .sidebar-header, .nav-item span:not(.step-num) { display: none; }
-            .main-content { margin-left: 70px; padding: 20px; }
+            .main-content { margin-left: 70px; padding-top: 120px; }
+            .top-bar { left: 70px; padding: 12px 20px; }
+            .stats-bar { display: none; }
+            .search-box { max-width: none; }
+            .section { padding: 30px 20px; }
         }
     </style>
 </head>
 <body>
 
+<!-- ========== 顶部工具栏 ========== -->
+<div class="top-bar">
+    <div class="top-row">
+        <div class="search-box" id="searchBox">
+            <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <path d="m21 21-4.35-4.35"></path>
+            </svg>
+            <input type="text" id="searchInput" placeholder="搜索工具、标签... (Ctrl+K)">
+            <button class="search-clear" id="searchClear">&times;</button>
+        </div>
+        <div class="stats-bar">
+            <div class="stat-item">
+                <span>工具总数</span>
+                <span class="stat-num" id="totalTools">0</span>
+            </div>
+            <div class="stat-item">
+                <span>显示</span>
+                <span class="stat-num" id="visibleCount">0</span>
+            </div>
+        </div>
+    </div>
+    <div class="filter-row">
+        <span class="filter-label">标签筛选:</span>
+        <div class="filter-mode-toggle" id="filterModeToggle">
+            <button class="filter-mode-btn active" data-mode="AND">AND</button>
+            <button class="filter-mode-btn" data-mode="OR">OR</button>
+        </div>
+        <div class="filter-tags" id="filterTags"></div>
+        <button class="filter-clear" id="filterClear">清除筛选</button>
+    </div>
+</div>
+
+<!-- ========== 侧边栏 ========== -->
 <div class="sidebar">
     <div class="sidebar-header">
         <h1>My AI Toolbox</h1>
         <p>全流程提质增效指南</p>
     </div>
     <ul class="nav-list" id="navList">
-        <li class="nav-item active" data-stage="llm"><span class="step-num">00</span><span>国产基座大模型</span></li>
-        <li class="nav-item" data-stage="info"><span class="step-num">01</span><span>信息收集与需求分析</span></li>
-        <li class="nav-item" data-stage="design"><span class="step-num">02</span><span>产品定义与视觉设计</span></li>
-        <li class="nav-item" data-stage="execution"><span class="step-num">03</span><span>开发试验与氛围编程</span></li>
-        <li class="nav-item" data-stage="analysis"><span class="step-num">04</span><span>数据统计分析挖掘</span></li>
-        <li class="nav-item" data-stage="agent"><span class="step-num">05</span><span>Agent与自动化</span></li>
-        <li class="nav-item" data-stage="work"><span class="step-num">06</span><span>其他办公事务</span></li>
-        <!-- <li class="nav-item" data-stage="prompt"><span class="step-num">06</span><span>提示词模板</span></li> -->
+        <li><a href="#llm" class="nav-item" data-section="llm"><span class="step-num">00</span><span>国产基座大模型</span></a></li>
+        <li><a href="#info" class="nav-item" data-section="info"><span class="step-num">01</span><span>信息收集与需求分析</span></a></li>
+        <li><a href="#design" class="nav-item" data-section="design"><span class="step-num">02</span><span>产品定义与视觉设计</span></a></li>
+        <li><a href="#execution" class="nav-item" data-section="execution"><span class="step-num">03</span><span>开发试验与氛围编程</span></a></li>
+        <li><a href="#analysis" class="nav-item" data-section="analysis"><span class="step-num">04</span><span>数据统计分析挖掘</span></a></li>
+        <li><a href="#agent" class="nav-item" data-section="agent"><span class="step-num">05</span><span>Agent与自动化</span></a></li>
+        <li><a href="#work" class="nav-item" data-section="work"><span class="step-num">06</span><span>其他办公事务</span></a></li>
     </ul>
     <div class="sidebar-footer">
-        <span> 本工具集均为国内环境可用</span><br>
-        <span> 最后更新：2026.04.15</span>
+        本工具集均为国内环境可用<br>
+        最后更新：2026.04.16
     </div>
 </div>
 
+<!-- ========== 主内容区 ========== -->
 <div class="main-content">
-    <div id="contentArea">
-        <!-- 动态渲染内容 -->
+
+    <!-- 筛选结果区域 -->
+    <div class="filter-results" id="filterResults">
+        <div class="filter-results-header">
+            <h2>筛选结果 (<span id="filterResultsCount">0</span>)</h2>
+            <button class="back-to-sections" id="backToSections">← 返回栏目视图</button>
+        </div>
+        <div class="filter-results-grid" id="filterResultsGrid"></div>
     </div>
+
+    <!-- 国产基座大模型 -->
+    <section class="section" id="llm" data-section="llm">
+        <div class="section-header">
+            <h2><span class="section-num">00</span>国产基座大模型</h2>
+            <p>为各类上层产品提供基础智能的LLM们，几乎每一家都已经自带了能力更全面的通用型Agent产品。</p>
+            <p class="tool-count">共 <span class="count">0</span> 个工具</p>
+            <p class="hidden-note">部分工具因筛选条件隐藏</p>
+        </div>
+        <div class="tool-grid" data-stage="llm">
+            <div class="tool-card" data-tool="GLM">
+                <div class="tag-row"><span class="tag tag-color-0">LLM</span><span class="tag tag-color-1">Agent</span></div>
+                <div class="tool-name">GLM</div>
+                <p class="tool-desc">智谱AI推出，清华系，中文环境优先选用，基本上一更新就是开源第一。两个链接分别为产品端（功能丰富）和模型端（纯净界面）。</p>
+                <div class="btn-group">
+                    <a href="https://chatglm.cn/" target="_blank" class="action-btn">智谱清言</a>
+                    <a href="https://chat.z.ai/" target="_blank" class="action-btn">Z.ai</a>
+                </div>
+            </div>
+            <div class="tool-card" data-tool="MiniMax">
+                <div class="tag-row"><span class="tag tag-color-0">LLM</span><span class="tag tag-color-1">Agent</span></div>
+                <div class="tool-name">MiniMax</div>
+                <p class="tool-desc">稀宇科技推出，综合能力强大，推荐下载桌面版（全能工作台）。</p>
+                <div class="btn-group">
+                    <a href="https://agent.minimaxi.com/" target="_blank" class="action-btn">访问官网</a>
+                </div>
+            </div>
+            <div class="tool-card" data-tool="Kimi">
+                <div class="tag-row"><span class="tag tag-color-0">LLM</span><span class="tag tag-color-1">Agent</span></div>
+                <div class="tool-name">Kimi</div>
+                <p class="tool-desc">月之暗面推出，适合多模态场景，前端能力较好，但目前算力不足，经常繁忙。有桌面版（AI浏览器类）。</p>
+                <div class="btn-group">
+                    <a href="https://www.kimi.com/" target="_blank" class="action-btn">访问官网</a>
+                </div>
+            </div>
+            <div class="tool-card" data-tool="Qwen">
+                <div class="tag-row"><span class="tag tag-color-0">LLM</span><span class="tag tag-color-1">Agent</span></div>
+                <div class="tool-name">Qwen</div>
+                <p class="tool-desc">阿里通义千问系列，长期开源榜一，和前3个基本是国产王者轮座。两个链接分别为产品端和模型端。</p>
+                <div class="btn-group">
+                    <a href="https://www.qianwen.com/" target="_blank" class="action-btn">千问</a>
+                    <a href="https://chat.qwen.ai/" target="_blank" class="action-btn">Qwen chat</a>
+                </div>
+            </div>
+            <div class="tool-card" data-tool="DeepSeek">
+                <div class="tag-row"><span class="tag tag-color-0">LLM</span><span class="tag tag-color-1">Agent</span></div>
+                <div class="tool-name">DeepSeek</div>
+                <p class="tool-desc">深度求索推出，永远有一席之地，最新版的长文本注意力机制很强，在多轮对话中能记住更多历史细节。【新出了专家模式】</p>
+                <div class="btn-group">
+                    <a href="https://chat.deepseek.com/" target="_blank" class="action-btn">访问官网</a>
+                </div>
+            </div>
+            <div class="tool-card" data-tool="豆包-Seed">
+                <div class="tag-row"><span class="tag tag-color-0">LLM</span><span class="tag tag-color-1">Agent</span></div>
+                <div class="tool-name">豆包-Seed</div>
+                <p class="tool-desc">字节跳动推出，工作生活娱乐皆可，支持自建Agent（固化系统提示词），有桌面版（AI浏览器类，官方支持部署模型到本地，但需有适配的硬件）。【其专家模式是写长文最佳实践之一】</p>
+                <div class="btn-group">
+                    <a href="https://www.doubao.com/chat/" target="_blank" class="action-btn">访问官网</a>
+                </div>
+            </div>
+            <div class="tool-card" data-tool="Step">
+                <div class="tag-row"><span class="tag tag-color-0">LLM</span><span class="tag tag-color-1">Agent</span></div>
+                <div class="tool-name">Step</div>
+                <p class="tool-desc">阶跃星辰推出，桌面版（全能工作台）也极具竞争力。</p>
+                <div class="btn-group">
+                    <a href="https://www.stepfun.com/chats/new" target="_blank" class="action-btn">访问官网</a>
+                </div>
+            </div>
+            <div class="tool-card" data-tool="文心ERNIE">
+                <div class="tag-row"><span class="tag tag-color-0">LLM</span><span class="tag tag-color-1">Agent</span></div>
+                <div class="tool-name">文心ERNIE</div>
+                <p class="tool-desc">百度推出，可以试试。</p>
+                <div class="btn-group">
+                    <a href="https://yiyan.baidu.com/" target="_blank" class="action-btn">访问官网</a>
+                </div>
+            </div>
+            <div class="tool-card" data-tool="混元">
+                <div class="tag-row"><span class="tag tag-color-0">LLM</span><span class="tag tag-color-1">Agent</span></div>
+                <div class="tool-name">混元</div>
+                <p class="tool-desc">腾讯推出，可以试试。</p>
+                <div class="btn-group">
+                    <a href="https://hunyuan.tencent.com" target="_blank" class="action-btn">访问官网</a>
+                </div>
+            </div>
+            <div class="tool-card" data-tool="天工Skywork">
+                <div class="tag-row"><span class="tag tag-color-0">LLM</span><span class="tag tag-color-1">Agent</span></div>
+                <div class="tool-name">天工Skywork</div>
+                <p class="tool-desc">昆仑万维推出，可以试试。</p>
+                <div class="btn-group">
+                    <a href="https://www.tiangong.cn/" target="_blank" class="action-btn">访问官网</a>
+                </div>
+            </div>
+            <div class="tool-card" data-tool="Longcat">
+                <div class="tag-row"><span class="tag tag-color-0">LLM</span><span class="tag tag-color-1">Agent</span></div>
+                <div class="tool-name">Longcat</div>
+                <p class="tool-desc">美团推出，可以试试。</p>
+                <div class="btn-group">
+                    <a href="https://longcat.chat/" target="_blank" class="action-btn">访问官网</a>
+                </div>
+            </div>
+            <div class="tool-card" data-tool="MIMO">
+                <div class="tag-row"><span class="tag tag-color-0">LLM</span><span class="tag tag-color-1">Agent</span></div>
+                <div class="tool-name">MIMO</div>
+                <p class="tool-desc">小米推出，可以试试。还有小米版云龙虾MiClaw</p>
+                <div class="btn-group">
+                    <a href="https://aistudio.xiaomimimo.com/#/" target="_blank" class="action-btn">访问官网</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 信息收集与需求分析 -->
+    <section class="section" id="info" data-section="info">
+        <div class="section-header">
+            <h2><span class="section-num">01</span>信息收集与需求分析</h2>
+            <p>此阶段重点在于快速理解行业背景、捕捉客户痛点并输出高质量方案大纲。利用 AI 提升调研深度和响应速度。</p>
+            <p class="tool-count">共 <span class="count">0</span> 个工具</p>
+            <p class="hidden-note">部分工具因筛选条件隐藏</p>
+        </div>
+        <div class="tool-grid" data-stage="info">
+            <div class="tool-card" data-tool="灵光">
+                <div class="tag-row"><span class="tag tag-color-0">搜索</span><span class="tag tag-color-1">APP</span></div>
+                <div class="tool-name">灵光</div>
+                <p class="tool-desc">蚂蚁集团推出的，适当篇幅、总分总的输出排版形式十分适合知识问答学习，适合灵光一闪时的提问，建议下载手机APP。</p>
+                <div class="btn-group">
+                    <a href="https://www.lingguang.com/chat" target="_blank" class="action-btn">访问官网</a>
+                </div>
+            </div>
+            <div class="tool-card" data-tool="秘塔AI搜索">
+                <div class="tag-row"><span class="tag tag-color-0">搜索</span></div>
+                <div class="tool-name">秘塔AI搜索</div>
+                <p class="tool-desc">秘塔科技推出，无广告搜索引擎，提供直接精准的答案，支持自动生成大纲和思维导图。</p>
+                <div class="btn-group">
+                    <a href="https://metaso.cn/" target="_blank" class="action-btn">访问官网</a>
+                </div>
+            </div>
+            <div class="tool-card" data-tool="AMiner">
+                <div class="tag-row"><span class="tag tag-color-0">搜索</span></div>
+                <div class="tool-name">AMiner</div>
+                <p class="tool-desc">智谱推出的AI学术搜索。</p>
+                <div class="btn-group">
+                    <a href="https://www.aminer.cn/" target="_blank" class="action-btn">访问官网</a>
+                </div>
+            </div>
+            <div class="tool-card" data-tool="豆包">
+                <div class="tag-row"><span class="tag tag-color-0">LLM</span><span class="tag tag-color-1">Agent</span></div>
+                <div class="tool-name">豆包</div>
+                <p class="tool-desc">开思考或专家模式，信息检索的幻觉率基本是国内最低的。</p>
+                <div class="btn-group">
+                    <a href="https://www.doubao.com/chat/" target="_blank" class="action-btn">访问官网</a>
+                </div>
+            </div>
+            <div class="tool-card" data-tool="万能调研提示词">
+                <div class="tag-row"><span class="tag tag-color-2">提示词</span></div>
+                <div class="tool-name">万能调研提示词</div>
+                <p class="tool-desc">公众号大佬-卡兹克推荐</p>
+                <div class="btn-group">
+                    <a href="https://mp.weixin.qq.com/s/Y_uRMYBmdLWUPnz_ac7jWA" target="_blank" class="action-btn">访问官网</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 产品定义与视觉设计 -->
+    <section class="section" id="design" data-section="design">
+        <div class="section-header">
+            <h2><span class="section-num">02</span>产品定义与视觉设计</h2>
+            <p>将需求具象化为 PRD 和原型。AI 可辅助生成描述、补全边界条件以及快速产出 UI 视觉稿。</p>
+            <p class="tool-count">共 <span class="count">0</span> 个工具</p>
+            <p class="hidden-note">部分工具因筛选条件隐藏</p>
+        </div>
+        <div class="tool-grid" data-stage="design">
+            <div class="tool-card" data-tool="AI BUDDY">
+                <div class="tag-row"><span class="tag tag-color-0">产品经理</span></div>
+                <div class="tool-name">AI BUDDY</div>
+                <p class="tool-desc">某产品经理自制的AI搭子，产品设计全流程的思路辅助，很有参考价值</p>
+                <div class="btn-group">
+                    <a href="https://aipair.kkjm.space/" target="_blank" class="action-btn">访问官网</a>
+                </div>
+            </div>
+            <div class="tool-card" data-tool="MasterGo">
+                <div class="tag-row"><span class="tag tag-color-0">原型UI</span></div>
+                <div class="tool-name">MasterGo</div>
+                <p class="tool-desc">莫高AI推出，用语言描述来画原型的最佳选择之一。</p>
+                <div class="btn-group">
+                    <a href="https://mastergo.com/" target="_blank" class="action-btn">访问官网</a>
+                </div>
+            </div>
+            <div class="tool-card" data-tool="星流">
+                <div class="tag-row"><span class="tag tag-color-0">原型UI</span></div>
+                <div class="tool-name">星流</div>
+                <p class="tool-desc">LiblibAI推出，辅助设计</p>
+                <div class="btn-group">
+                    <a href="https://www.xingliu.art/" target="_blank" class="action-btn">访问官网</a>
+                </div>
+            </div>
+            <div class="tool-card" data-tool="Kimi PPT助手">
+                <div class="tag-row"><span class="tag tag-color-1">PPT</span></div>
+                <div class="tool-name">Kimi PPT助手</div>
+                <p class="tool-desc">组件式AI PPT的好选择之一（以前和AI PPT合作，现在好像没了，模板变少了）</p>
+                <div class="btn-group">
+                    <a href="https://www.kimi.com/slides" target="_blank" class="action-btn">访问官网</a>
+                </div>
+            </div>
+            <div class="tool-card" data-tool="MiniMax Agent">
+                <div class="tag-row"><span class="tag tag-color-1">PPT</span><span class="tag tag-color-2">全能型</span></div>
+                <div class="tool-name">MiniMax Agent</div>
+                <p class="tool-desc">生图式AI PPT的最佳选择（但最近官方更新了skill换成组件式和生图式结合，感觉美学变差了），此外其他功能也很强大</p>
+                <div class="btn-group">
+                    <a href="https://agent.minimaxi.com/" target="_blank" class="action-btn">访问官网</a>
+                </div>
+            </div>
+            <div class="tool-card" data-tool="ProcessOn">
+                <div class="tag-row"><span class="tag tag-color-0">流程图</span><span class="tag tag-color-1">思维导图</span><span class="tag tag-color-2">架构图</span></div>
+                <div class="tool-name">ProcessOn</div>
+                <p class="tool-desc">在线制图比较方便，也支持AI辅助</p>
+                <div class="btn-group">
+                    <a href="https://www.processon.com" target="_blank" class="action-btn">访问官网</a>
+                </div>
+            </div>
+            <div class="tool-card" data-tool="iSlide">
+                <div class="tag-row"><span class="tag tag-color-1">PPT</span><span class="tag tag-color-2">插件</span></div>
+                <div class="tool-name">iSlide</div>
+                <p class="tool-desc">PPT插件工具和模板平台iSlide推出的AI PPT生成和设计工具，旨在辅助用户更快、更高效地制作和优化PPT演示文稿</p>
+                <div class="btn-group">
+                    <a href="https://www.islide.cc/?mtm_campaign=ai-bot" target="_blank" class="action-btn">访问官网</a>
+                </div>
+            </div>
+            <div class="tool-card" data-tool="Napkin">
+                <div class="tag-row"><span class="tag tag-color-1">PPT</span></div>
+                <div class="tool-name">Napkin</div>
+                <p class="tool-desc">将文字转化为视觉内容，让分享想法变得快速高效</p>
+                <div class="btn-group">
+                    <a href="https://www.napkin.ai/" target="_blank" class="action-btn">访问官网</a>
+                </div>
+            </div>
+            <div class="tool-card" data-tool="next-ai-drawio">
+                <div class="tag-row"><span class="tag tag-color-0">AI</span><span class="tag tag-color-2">架构图</span></div>
+                <div class="tool-name">next-ai-drawio</div>
+                <p class="tool-desc">用自然语言描述生成可编辑的架构图</p>
+                <div class="btn-group">
+                    <a href="https://next-ai-drawio.jiang.jp/zh" target="_blank" class="action-btn">访问官网</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 开发试验与氛围编程 -->
+    <section class="section" id="execution" data-section="execution">
+        <div class="section-header">
+            <h2><span class="section-num">03</span>开发试验与氛围编程</h2>
+            <p>低代码、零代码的智能体搭建平台，以及Vibe Coding工具。</p>
+            <p class="tool-count">共 <span class="count">0</span> 个工具</p>
+            <p class="hidden-note">部分工具因筛选条件隐藏</p>
+        </div>
+        <div class="tool-grid" data-stage="execution">
+            <div class="tool-card" data-tool="Qoder">
+                <div class="tag-row"><span class="tag tag-color-0">AI编程</span></div>
+                <div class="tool-name">Qoder</div>
+                <p class="tool-desc">阿里巴巴推出，AI原生IDE，支持自然语言编程和全周期开发自动化。本工具集页面即是在Qoder中用Kimi2.5迭代的</p>
+                <div class="btn-group">
+                    <a href="https://qoder.alibaba-inc.com/" target="_blank" class="action-btn">访问官网</a>
+                </div>
+            </div>
+            <div class="tool-card" data-tool="Trae">
+                <div class="tag-row"><span class="tag tag-color-0">AI编程</span></div>
+                <div class="tool-name">Trae</div>
+                <p class="tool-desc">字节跳动推出，AI原生IDE，支持Chat、Builder和SOLO三种开发模式。</p>
+                <div class="btn-group">
+                    <a href="https://www.trae.com.cn/" target="_blank" class="action-btn">访问官网</a>
+                </div>
+            </div>
+            <div class="tool-card" data-tool="CodeBuddy">
+                <div class="tag-row"><span class="tag tag-color-0">AI编程</span></div>
+                <div class="tool-name">CodeBuddy</div>
+                <p class="tool-desc">腾讯云推出，AI编程助手，支持智能代码补全、错误检测和多文件开发。</p>
+                <div class="btn-group">
+                    <a href="https://copilot.tencent.com/" target="_blank" class="action-btn">访问官网</a>
+                </div>
+            </div>
+            <div class="tool-card" data-tool="扣子 Coze">
+                <div class="tag-row"><span class="tag tag-color-0">智能体平台</span><span class="tag tag-color-1">在线</span><span class="tag tag-color-2">非技术人员也适用</span></div>
+                <div class="tool-name">扣子 Coze</div>
+                <p class="tool-desc">字节跳动推出的AI智能体开发平台，支持可视化工作流和插件扩展，可发布到多平台。</p>
+                <div class="btn-group">
+                    <a href="https://www.coze.cn/" target="_blank" class="action-btn">访问官网</a>
+                </div>
+            </div>
+            <div class="tool-card" data-tool="阿里云百炼">
+                <div class="tag-row"><span class="tag tag-color-0">智能体平台</span><span class="tag tag-color-1">在线</span></div>
+                <div class="tool-name">阿里云百炼</div>
+                <p class="tool-desc">阿里云推出的一站式大模型开发与应用平台，集成通义千问系列及多种主流模型。</p>
+                <div class="btn-group">
+                    <a href="https://bailian.console.aliyun.com/" target="_blank" class="action-btn">访问官网</a>
+                </div>
+            </div>
+            <div class="tool-card" data-tool="蚂蚁百宝箱">
+                <div class="tag-row"><span class="tag tag-color-0">智能体平台</span><span class="tag tag-color-1">在线</span></div>
+                <div class="tool-name">蚂蚁百宝箱</div>
+                <p class="tool-desc">蚂蚁集团推出的AI智能体开发平台，支持零代码构建智能体应用并发布到支付宝等渠道。</p>
+                <div class="btn-group">
+                    <a href="https://tbox.alipay.com/" target="_blank" class="action-btn">访问官网</a>
+                </div>
+            </div>
+            <div class="tool-card" data-tool="Dify">
+                <div class="tag-row"><span class="tag tag-color-0">智能体开发平台</span><span class="tag tag-color-1">本地</span></div>
+                <div class="tool-name">Dify</div>
+                <p class="tool-desc">开源LLM应用开发平台，支持可视化工作流构建、RAG和Agent能力，快速构建AI应用。</p>
+                <div class="btn-group">
+                    <a href="https://dify.ai/" target="_blank" class="action-btn">访问官网</a>
+                </div>
+            </div>
+            <div class="tool-card" data-tool="PromptPilot">
+                <div class="tag-row"><span class="tag tag-color-2">提示词优化</span></div>
+                <div class="tool-name">PromptPilot</div>
+                <p class="tool-desc">字节跳动推出的AI提示词生成与优化工具，支持Prompt生成、调优和批量处理。</p>
+                <div class="btn-group">
+                    <a href="https://promptpilot.volcengine.com/home" target="_blank" class="action-btn">访问官网</a>
+                </div>
+            </div>
+            <div class="tool-card" data-tool="Ollama">
+                <div class="tag-row"><span class="tag tag-color-1">本地部署</span></div>
+                <div class="tool-name">Ollama</div>
+                <p class="tool-desc">开源工具，支持在本地部署开源大模型，保护数据隐私。</p>
+                <div class="btn-group">
+                    <a href="https://ollama.com/" target="_blank" class="action-btn">访问官网</a>
+                </div>
+            </div>
+            <div class="tool-card" data-tool="LM Studio">
+                <div class="tag-row"><span class="tag tag-color-1">本地部署</span><span class="tag tag-color-2">非技术人员也适用</span></div>
+                <div class="tool-name">LM Studio</div>
+                <p class="tool-desc">本地大模型运行工具，提供图形界面。</p>
+                <div class="btn-group">
+                    <a href="https://lmstudio.ai/" target="_blank" class="action-btn">访问官网</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 数据统计分析挖掘 -->
+    <section class="section" id="analysis" data-section="analysis">
+        <div class="section-header">
+            <h2><span class="section-num">04</span>数据统计分析挖掘</h2>
+            <p>收集数据，生成报告。AI 可辅助数据可视化和深度分析。</p>
+            <p class="tool-count">共 <span class="count">0</span> 个工具</p>
+            <p class="hidden-note">部分工具因筛选条件隐藏</p>
+        </div>
+        <div class="tool-grid" data-stage="analysis">
+            <div class="tool-card" data-tool="理论上所有AI【注意数据安全！！！必须脱敏！！！】">
+                <div class="tag-row"><span class="tag tag-color-2">提示词</span></div>
+                <div class="tool-name">理论上所有AI【注意数据安全！！！必须脱敏！！！】</div>
+                <p class="tool-desc">比写文章稍微复杂一些，把人的工作流转换成提示词模板或skill就行，使用下一个栏目的任意Agent皆可</p>
+                <div class="btn-group">
+                    <button class="action-btn modal-btn" data-prompt="你是python数据分析专家，我要写一篇《XXX分析报告》，现有N条数据，数据字段包括：A/B/C...（不要上传原始数据，可说明字段意义或提供模拟数据），请制定分析大纲，等我确认后开始编码进行数据清洗、统计、可视化，并生成报告">查看提示词</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Agent与自动化 -->
+    <section class="section" id="agent" data-section="agent">
+        <div class="section-header">
+            <h2><span class="section-num">05</span>Agent与自动化</h2>
+            <p>自动执行重复任务，提升效率...可辅助编写脚本和流程...不，不止是这些，本页的Agent可以做前述栏目的任何事情【本页全都是非技术人员也适用】</p>
+            <p class="tool-count">共 <span class="count">0</span> 个工具</p>
+            <p class="hidden-note">部分工具因筛选条件隐藏</p>
+        </div>
+        <div class="tool-grid" data-stage="agent">
+            <div class="tool-card" data-tool="WorkBuddy">
+                <div class="tag-row"><span class="tag tag-color-0">Claw</span><span class="tag tag-color-1">Agent</span><span class="tag tag-color-2">桌面版</span></div>
+                <div class="tool-name">WorkBuddy</div>
+                <p class="tool-desc">AI原生的桌面智能体工作台，可在手机主流 IM 下指令，AI 自动干活交付。腾讯版小龙虾（底层不是openclaw），简单易用，有免费额度。另外还有原始虾QClaw（基于openclaw）</p>
+                <div class="btn-group">
+                    <a href="https://www.codebuddy.cn/work/" target="_blank" class="action-btn">访问官网</a>
+                </div>
+            </div>
+            <div class="tool-card" data-tool="MiniMax Agent Desktop">
+                <div class="tag-row"><span class="tag tag-color-0">Claw</span><span class="tag tag-color-1">Agent</span><span class="tag tag-color-2">桌面版</span></div>
+                <div class="tool-name">MiniMax Agent Desktop</div>
+                <p class="tool-desc">MiniMax推出的通用型AI智能体，能够完成长程复杂任务，具备多步规划、灵活拆解任务需求和执行多个子任务的能力。另外也有云龙虾MaxClaw</p>
+                <div class="btn-group">
+                    <a href="https://agent.minimaxi.com/download" target="_blank" class="action-btn">访问官网</a>
+                </div>
+            </div>
+            <div class="tool-card" data-tool="阶跃AI桌面伙伴">
+                <div class="tag-row"><span class="tag tag-color-0">Claw</span><span class="tag tag-color-1">Agent</span><span class="tag tag-color-2">桌面版</span></div>
+                <div class="tool-name">阶跃AI桌面伙伴</div>
+                <p class="tool-desc">阶跃AI推出的智能助手，工具能连接本地操作系统，查看和管理本地文件，支持访问互联网，完成复杂任务规划与执行。也内置了自家龙虾StepClaw</p>
+                <div class="btn-group">
+                    <a href="https://www.stepfun.com/download" target="_blank" class="action-btn">访问官网</a>
+                </div>
+            </div>
+            <div class="tool-card" data-tool="QoderWork">
+                <div class="tag-row"><span class="tag tag-color-0">Agent</span><span class="tag tag-color-1">桌面版</span></div>
+                <div class="tool-name">QoderWork</div>
+                <p class="tool-desc">阿里巴巴Qoder团队推出的桌面端AI智能体，主打「人人都能用的本地AI助理」。把大模型、Agent框架、MCP工具集和可自定义Skills封装进一款macOS应用</p>
+                <div class="btn-group">
+                    <a href="https://qoder.com/qoderwork" target="_blank" class="action-btn">访问官网</a>
+                </div>
+            </div>
+            <div class="tool-card" data-tool="Kimi Agent">
+                <div class="tag-row"><span class="tag tag-color-0">Claw</span><span class="tag tag-color-1">Agent</span><span class="tag tag-color-2">在线</span></div>
+                <div class="tool-name">Kimi Agent</div>
+                <p class="tool-desc">Agent模式很全能，启动一台云电脑执行各种操作，缺点是不能直接操作本地文件，要上传/下载。另外也有云龙虾KimiClaw</p>
+                <div class="btn-group">
+                    <a href="https://www.kimi.com/" target="_blank" class="action-btn">访问官网</a>
+                </div>
+            </div>
+            <div class="tool-card" data-tool="智谱AI的虾">
+                <div class="tag-row"><span class="tag tag-color-0">Claw</span><span class="tag tag-color-1">Agent</span><span class="tag tag-color-2">桌面版</span></div>
+                <div class="tool-name">智谱AI的虾</div>
+                <p class="tool-desc">有云端（GLM-Claw），有本地（AutoClaw），功能有所区别，易用性都不错</p>
+                <div class="btn-group">
+                    <a href="https://chatglm.cn/main/createClaw?lang=zh" target="_blank" class="action-btn">GLM-Claw</a>
+                    <a href="https://autoglm.zhipuai.cn/autoclaw/" target="_blank" class="action-btn">AutoClaw</a>
+                </div>
+            </div>
+            <div class="tool-card" data-tool="百度龙虾全家桶">
+                <div class="tag-row"><span class="tag tag-color-0">Claw</span><span class="tag tag-color-1">Agent</span><span class="tag tag-color-2">桌面版</span></div>
+                <div class="tool-name">百度龙虾全家桶</div>
+                <p class="tool-desc">太多了用不过来</p>
+                <div class="btn-group">
+                    <a href="https://hsz.baidu.com/operator/?c=bdpz" target="_blank" class="action-btn">RedClaw</a>
+                    <a href="https://cloud.baidu.com/product/du.html" target="_blank" class="action-btn">DuClaw</a>
+                    <a href="https://cloud.baidu.com/product/dumate.html" target="_blank" class="action-btn">DuMate</a>
+                </div>
+            </div>
+            <div class="tool-card" data-tool="Quicker">
+                <div class="tag-row"><span class="tag tag-color-2">快捷动作</span></div>
+                <div class="tool-name">Quicker</div>
+                <p class="tool-desc">Windows平台的自动化效率工具，通过可视化编程创建快捷动作，支持8000+共享动作库。</p>
+                <div class="btn-group">
+                    <a href="https://getquicker.net/" target="_blank" class="action-btn">访问官网</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 其他办公事务 -->
+    <section class="section" id="work" data-section="work">
+        <div class="section-header">
+            <h2><span class="section-num">06</span>其他办公事务</h2>
+            <p>处理日常办公事务，提高效率。</p>
+            <p class="tool-count">共 <span class="count">0</span> 个工具</p>
+            <p class="hidden-note">部分工具因筛选条件隐藏</p>
+        </div>
+        <div class="tool-grid" data-stage="work">
+            <div class="tool-card" data-tool="WPS">
+                <div class="tag-row"><span class="tag tag-color-0">办公</span></div>
+                <div class="tool-name">WPS</div>
+                <p class="tool-desc">开个会员，很多功能都挺方便的，文档校对、识图改字等。</p>
+                <div class="btn-group">
+                    <a href="https://www.wps.com/" target="_blank" class="action-btn">访问官网</a>
+                </div>
+            </div>
+            <div class="tool-card" data-tool="AI speaker">
+                <div class="tag-row"><span class="tag tag-color-1">语音</span></div>
+                <div class="tool-name">AI speaker</div>
+                <p class="tool-desc">在线免费文字转语音，剪辑系统演示视频需配音时可用。</p>
+                <div class="btn-group">
+                    <a href="https://ai-speaker.net/zh" target="_blank" class="action-btn">访问官网</a>
+                </div>
+            </div>
+            <div class="tool-card" data-tool="即梦">
+                <div class="tag-row"><span class="tag tag-color-1">视频</span></div>
+                <div class="tool-name">即梦</div>
+                <p class="tool-desc">字节跳动推出，最强视频生成AI，Seedance2.0模型，超越OpenAI的Sora2和谷歌的Veo3。</p>
+                <div class="btn-group">
+                    <a href="https://jimeng.jianying.com" target="_blank" class="action-btn">访问官网</a>
+                </div>
+            </div>
+            <div class="tool-card" data-tool="万相">
+                <div class="tag-row"><span class="tag tag-color-1">视频</span><span class="tag tag-color-0">图片</span></div>
+                <div class="tool-name">万相</div>
+                <p class="tool-desc">阿里的，也还不错</p>
+                <div class="btn-group">
+                    <a href="https://tongyi.aliyun.com/wan" target="_blank" class="action-btn">访问官网</a>
+                </div>
+            </div>
+            <div class="tool-card" data-tool="可灵">
+                <div class="tag-row"><span class="tag tag-color-1">视频</span></div>
+                <div class="tool-name">可灵</div>
+                <p class="tool-desc">快手推出，国内领先的视频生成AI之一。</p>
+                <div class="btn-group">
+                    <a href="https://app.klingai.com/cn/" target="_blank" class="action-btn">访问官网</a>
+                </div>
+            </div>
+            <div class="tool-card" data-tool="提示词优化助手">
+                <div class="tag-row"><span class="tag tag-color-2">提示词</span></div>
+                <div class="tool-name">提示词优化助手</div>
+                <p class="tool-desc">我用豆包建的在线提示词优化助手，输入【优化提示词：（你的想法）】即可。</p>
+                <div class="btn-group">
+                    <a href="https://doubao.com/bot/gZZm3FsP" target="_blank" class="action-btn">访问官网</a>
+                </div>
+            </div>
+            <div class="tool-card" data-tool="提示词优化助手PRO">
+                <div class="tag-row"><span class="tag tag-color-2">提示词</span></div>
+                <div class="tool-name">提示词优化助手PRO</div>
+                <p class="tool-desc">前一个是精炼版优化，这个是进阶框架版优化，多数任务用前一个足够</p>
+                <div class="btn-group">
+                    <a href="https://doubao.com/bot/gZZm3FsP" target="_blank" class="action-btn">访问官网</a>
+                </div>
+            </div>
+            <div class="tool-card" data-tool="有道宝库">
+                <div class="tag-row"><span class="tag tag-color-0">知识库</span><span class="tag tag-color-1">PPT</span></div>
+                <div class="tool-name">有道宝库</div>
+                <p class="tool-desc">网易有道推出的AI知识库，定位为AI研究助手与思考伙伴，号称中国版NotebookLM（谷歌推出，同类产品的TOP1），聚焦知识的深度理解与结构化重构，为用户提供一站式知识管理、AI智能问答及多模态内容生成服务</p>
+                <div class="btn-group">
+                    <a href="https://baoku.youdao.com/" target="_blank" class="action-btn">访问官网</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
 </div>
 
 <script>
-    const data = {
-        llm: {
-            title: "国产基座大模型",
-            desc: "为各类上层产品提供基础智能的LLM们，几乎每一家都已经自带了能力更全面的通用型Agent产品。",
-            tools: [
-                { name: "GLM", tags: ["LLM", "Agent"], desc: "智谱AI推出，清华系，中文环境优先选用，基本上一更新就是开源第一。两个链接分别为产品端（功能丰富）和模型端（纯净界面）。", 
-                    links: [
-                        { text: "智谱清言", url: "https://chatglm.cn/" },
-                        { text: "Z.ai", url: "https://chat.z.ai/" }
-                    ]
-                },
-                { name: "MiniMax", tags: ["LLM", "Agent"], desc: "稀宇科技推出，综合能力强大，推荐下载桌面版（全能工作台）。", link: "https://agent.minimaxi.com/" },
-                { name: "Kimi", tags: ["LLM", "Agent"], desc: "月之暗面推出，适合多模态场景，前端能力较好，但目前算力不足，经常繁忙。有桌面版（AI浏览器类）。", link: "https://www.kimi.com/" },
-                { name: "Qwen", tags: ["LLM", "Agent"], desc: "阿里通义千问系列，长期开源榜一，和前3个基本是国产王者轮座。两个链接分别为产品端和模型端。", 
-                    links: [
-                        { text: "千问", url: "https://www.qianwen.com/" },
-                        { text: "Qwen chat", url: "https://chat.qwen.ai/" }
-                    ]
-                },
-                { name: "DeepSeek", tags: ["LLM", "Agent"], desc: "深度求索推出，永远有一席之地，最新版的长文本注意力机制很强，在多轮对话中能记住更多历史细节。【新出了专家模式】", link: "https://chat.deepseek.com/" },
-                { name: "豆包-Seed", tags: ["LLM", "Agent"], desc: "字节跳动推出，工作生活娱乐皆可，支持自建Agent（固化系统提示词），有桌面版（AI浏览器类，官方支持部署模型到本地，但需有适配的硬件）。【其专家模式是写长文最佳实践之一】", link: "https://www.doubao.com/chat/" },
-                { name: "Step", tags: ["LLM", "Agent"], desc: "阶跃星辰推出，桌面版（全能工作台）也极具竞争力。", link: "https://www.stepfun.com/chats/new" },
-                { name: "文心ERNIE", tags: ["LLM", "Agent"], desc: "百度推出，可以试试。", link: "https://yiyan.baidu.com/" },
-                { name: "混元", tags: ["LLM", "Agent"], desc: "腾讯推出，可以试试。", link: "https://hunyuan.tencent.com" },
-                { name: "天工Skywork", tags: ["LLM", "Agent"], desc: "昆仑万维推出，可以试试。", link: "https://www.tiangong.cn/" },
-                { name: "Longcat", tags: ["LLM", "Agent"], desc: "美团推出，可以试试。", link: "https://longcat.chat/" },
-                { name: "MIMO", tags: ["LLM", "Agent"], desc: "小米推出，可以试试。还有小米版云龙虾MiClaw", link: "https://aistudio.xiaomimimo.com/#/" },
-            ]
-        },
-        info: {
-            title: "信息收集与需求分析",
-            desc: "此阶段重点在于快速理解行业背景、捕捉客户痛点并输出高质量方案大纲。利用 AI 提升调研深度和响应速度。",
-            tools: [
-                // { name: "纳米AI搜索", tags: ["搜索"], desc: "360集团推出，支持多模态输入（文字、语音、图片、视频），集搜索、理解和创作于一体。", link: "https://www.n.cn/" },
-                { name: "灵光", tags: ["搜索", "APP"], desc: "蚂蚁集团推出的，适当篇幅、总分总的输出排版形式十分适合知识问答学习，适合灵光一闪时的提问，建议下载手机APP。", link: "https://www.lingguang.com/chat" },
-                { name: "秘塔AI搜索", tags: ["搜索"], desc: "秘塔科技推出，无广告搜索引擎，提供直接精准的答案，支持自动生成大纲和思维导图。", link: "https://metaso.cn/" },
-                { name: "AMiner", tags: ["搜索"], desc: "智谱推出的AI学术搜索。", link: "https://www.aminer.cn/" },
-                { name: "豆包", tags: ["LLM", "Agent"], desc: "开思考或专家模式，信息检索的幻觉率基本是国内最低的。", link: "https://www.doubao.com/chat/" },
-                { name: "万能调研提示词", tags: ["提示词"], desc: "公众号大佬-卡兹克推荐", link: "https://mp.weixin.qq.com/s/Y_uRMYBmdLWUPnz_ac7jWA" },
-            
-            ]
-        },
-        design: {
-            title: "产品定义与视觉设计",
-            desc: "将需求具象化为 PRD 和原型。AI 可辅助生成描述、补全边界条件以及快速产出 UI 视觉稿。",
-            tools: [
-                { name: "AI BUDDY", tags: ["产品经理"], desc: "某产品经理自制的AI搭子，产品设计全流程的思路辅助，很有参考价值", link: "https://aipair.kkjm.space/" },
-                { name: "MasterGo", tags: ["原型UI"], desc: "莫高AI推出，用语言描述来画原型的最佳选择之一。", link: "https://mastergo.com/" },
-                { name: "星流", tags: ["原型UI"], desc: "LiblibAI推出，辅助设计", link: "https://www.xingliu.art/" },
-                { name: "Kimi PPT助手", tags: ["PPT"], desc: "组件式AI PPT的好选择之一（以前和AI PPT合作，现在好像没了，模板变少了）", link: "https://www.kimi.com/slides" },
-                { name: "MiniMax Agent", tags: ["PPT", "全能型"], desc: "生图式AI PPT的最佳选择（但最近官方更新了skill换成组件式和生图式结合，感觉美学变差了），此外其他功能也很强大", link: "https://agent.minimaxi.com/" },
-                { name: "ProcessOn", tags: ["流程图", "思维导图", "架构图"], desc: "在线制图比较方便，也支持AI辅助", link: "https://www.processon.com" },
-                { name: "iSlide", tags: ["PPT", "插件"], desc: "PPT插件工具和模板平台iSlide推出的AI PPT生成和设计工具，旨在辅助用户更快、更高效地制作和优化PPT演示文稿", link: "https://www.islide.cc/?mtm_campaign=ai-bot" },
-                { name: "Napkin", tags: ["PPT"], desc: "将文字转化为视觉内容，让分享想法变得快速高效", link: "https://www.napkin.ai/" },
-                { name: "next-ai-drawio", tags: ["AI", "架构图"], desc: "用自然语言描述生成可编辑的架构图", link: "https://next-ai-drawio.jiang.jp/zh" },
-                
-            ]
-        },
-        execution: {
-            title: "开发试验与氛围编程",
-            desc: "低代码、零代码的智能体搭建平台，以及Vibe Coding工具。",
-            tools: [
-                { name: "Qoder", tags: ["AI编程"], desc: "阿里巴巴推出，AI原生IDE，支持自然语言编程和全周期开发自动化。本工具集页面即是在Qoder中用Kimi2.5迭代的", link: "https://qoder.alibaba-inc.com/" },
-                { name: "Trae", tags: ["AI编程"], desc: "字节跳动推出，AI原生IDE，支持Chat、Builder和SOLO三种开发模式。", link: "https://www.trae.com.cn/" },
-                { name: "CodeBuddy", tags: ["AI编程"], desc: "腾讯云推出，AI编程助手，支持智能代码补全、错误检测和多文件开发。", link: "https://copilot.tencent.com/" },
-                { name: "扣子 Coze", tags: ["智能体平台", "在线", "非技术人员也适用"], desc: "字节跳动推出的AI智能体开发平台，支持可视化工作流和插件扩展，可发布到多平台。", link: "https://www.coze.cn/" },
-                { name: "阿里云百炼", tags: ["智能体平台", "在线"], desc: "阿里云推出的一站式大模型开发与应用平台，集成通义千问系列及多种主流模型。", link: "https://bailian.console.aliyun.com/" },
-                { name: "蚂蚁百宝箱", tags: ["智能体平台", "在线"], desc: "蚂蚁集团推出的AI智能体开发平台，支持零代码构建智能体应用并发布到支付宝等渠道。", link: "https://tbox.alipay.com/" },
-                { name: "Dify", tags: ["智能体开发平台", "本地"], desc: "开源LLM应用开发平台，支持可视化工作流构建、RAG和Agent能力，快速构建AI应用。", link: "https://dify.ai/" },
-                { name: "PromptPilot", tags: ["提示词优化"], desc: "字节跳动推出的AI提示词生成与优化工具，支持Prompt生成、调优和批量处理。", link: "https://promptpilot.volcengine.com/home" },
-                { name: "Ollama", tags: ["本地部署"], desc: "开源工具，支持在本地部署开源大模型，保护数据隐私。", link: "https://ollama.com/" },
-                { name: "LM Studio", tags: ["本地部署", "非技术人员也适用"], desc: "本地大模型运行工具，提供图形界面。", link: "https://lmstudio.ai/" },
-                ]
-        },
-        analysis: {
-            title: "数据统计分析挖掘",
-            desc: "收集数据，生成报告。AI 可辅助数据可视化和深度分析。",
-            tools: [
-                { name: "理论上所有AI【注意数据安全！！！必须脱敏！！！】", tags: ["提示词"], desc: "比写文章稍微复杂一些，把人的工作流转换成提示词模板或skill就行，使用下一个栏目的任意Agent皆可", type: "modal", 
-                prompt: "你是python数据分析专家，我要写一篇《XXX分析报告》，现有N条数据，数据字段包括：A/B/C...（不要上传原始数据，可说明字段意义或提供模拟数据），请制定分析大纲，等我确认后开始编码进行数据清洗、统计、可视化，并生成报告", },
-            ]
-        },
-        agent: {
-            title: "Agent与自动化",
-            desc: "自动执行重复任务，提升效率...可辅助编写脚本和流程...不，不止是这些，本页的Agent可以做前述栏目的任何事情【本页全都是非技术人员也适用】",
-            tools: [
-                { name: "WorkBuddy", tags: ["Claw", "Agent", "桌面版", ], desc: "AI原生的桌面智能体工作台，可在手机主流 IM 下指令，AI 自动干活交付。腾讯版小龙虾（底层不是openclaw），简单易用，有免费额度。另外还有原始虾QClaw（基于openclaw）", link: "https://www.codebuddy.cn/work/" },
-                { name: "MiniMax Agent Desktop", tags: ["Claw", "Agent", "桌面版", ], desc: "MiniMax推出的通用型AI智能体，能够完成长程复杂任务，具备多步规划、灵活拆解任务需求和执行多个子任务的能力。另外也有云龙虾MaxClaw", link: "https://agent.minimaxi.com/download" },
-                { name: "阶跃AI桌面伙伴", tags: ["Claw", "Agent", "桌面版", ], desc: "阶跃AI推出的智能助手，工具能连接本地操作系统，查看和管理本地文件，支持访问互联网，完成复杂任务规划与执行。也内置了自家龙虾StepClaw", link: "https://www.stepfun.com/download" },
-                { name: "QoderWork", tags: ["Agent", "桌面版"], desc: "阿里巴巴Qoder团队推出的桌面端AI智能体，主打“人人都能用的本地AI助理”。把大模型、Agent框架、MCP工具集和可自定义Skills封装进一款macOS应用", link: "https://qoder.com/qoderwork" },
-                { name: "Kimi Agent", tags: ["Claw", "Agent", "在线" ], desc: "Agent模式很全能，启动一台云电脑执行各种操作，缺点是不能直接操作本地文件，要上传/下载。另外也有云龙虾KimiClaw", link: "https://www.kimi.com/" },
-                { name: "智谱AI的虾", tags: ["Claw", "Agent", "桌面版", "在线"], desc: "有云端（GLM-Claw），有本地（AutoClaw），功能有所区别，易用性都不错", 
-                    links: [
-                        { text: "GLM-Claw", url: "https://chatglm.cn/main/createClaw?lang=zh" },
-                        { text: "AutoClaw", url: "https://autoglm.zhipuai.cn/autoclaw/" }
-                    ]
-                },
-                { name: "百度龙虾全家桶", tags: [ "Claw", "Agent", "桌面版", "在线", "移动端"], desc: "太多了用不过来", 
-                    links: [
-                        { text: "RedClaw（手机）", url: "https://hsz.baidu.com/operator/?c=bdpz" },
-                        { text: "DuClaw（在线）", url: "https://cloud.baidu.com/product/du.html" },
-                        { text: "DuMate（本地）", url: "https://cloud.baidu.com/product/dumate.html" }
-                    ]
-                },
-                { name: "Quicker", tags: ["快捷动作"], desc: "Windows平台的自动化效率工具，通过可视化编程创建快捷动作，支持8000+共享动作库。", link: "https://getquicker.net/" }
-            
-            ]
-        },
-        work: {
-            title: "其他办公事务",
-            desc: "处理日常办公事务，提高效率。",
-            tools: [
-                { name: "WPS", tags: ["办公"], desc: "开个会员，很多功能都挺方便的，文档校对、识图改字等。", link: "https://www.wps.com/" },
-                { name: "AI speaker", tags: ["语音"], desc: "在线免费文字转语音，剪辑系统演示视频需配音时可用。", link: "https://ai-speaker.net/zh" },
-                { name: "即梦", tags: ["视频"], desc: "字节跳动推出，最强视频生成AI，Seedance2.0模型，超越OpenAI的Sora2和谷歌的Veo3。", link: "https://jimeng.jianying.com" },
-                { name: "万相", tags: ["视频", "图片"], desc: "阿里的，也还不错", link: "https://tongyi.aliyun.com/wan" },
-                { name: "可灵", tags: ["视频"], desc: "快手推出，国内领先的视频生成AI之一。", link: "https://app.klingai.com/cn/" },
-                { name: "提示词优化助手", tags: ["提示词"], desc: "我用豆包建的在线提示词优化助手，输入【优化提示词：（你的想法）】即可。", link: "https://doubao.com/bot/gZZm3FsP" },
-                { name: "提示词优化助手PRO", tags: ["提示词"], desc: "前一个是精炼版优化，这个是进阶框架版优化，多数任务用前一个足够", link: "https://doubao.com/bot/gZZm3FsP" },
-                { name: "有道宝库", tags: ["知识库", "PPT"], desc: "网易有道推出的AI知识库，定位为AI研究助手与思考伙伴，号称中国版NotebookLM（谷歌推出，同类产品的TOP1），聚焦知识的深度理解与结构化重构，为用户提供一站式知识管理、AI智能问答及多模态内容生成服务", link: "https://baoku.youdao.com/" },
-            ]
-        },
-        prompt: {
-            title: "提示词模板",
-            desc: "一些可复用的提示词模板，提升AI使用效率。",
-            tools: [
-                { name: "XX", tags: ["提示词"], desc: "XX是一个强大的提示词生成工具，支持多语言和多场景。", type: "modal", prompt: "提示词内容...", },
-                { name: "XX", tags: ["提示词"], desc: "XX是一个强大的提示词生成工具，支持多语言和多场景。", type: "modal", prompt: "提示词内容...", },
-                { name: "XX", tags: ["提示词"], desc: "XX是一个强大的提示词生成工具，支持多语言和多场景。", type: "modal", prompt: "提示词内容...", }
-            ]
-        },
-    };
+    // ==================== 状态 ====================
+    let searchQuery = '';
+    let activeFilters = [];
+    let filterMode = 'AND'; // 'AND' 或 'OR'
+    let isFilteredView = false; // 是否显示筛选结果视图
 
-    function renderStage(stageId) {
-        const stage = data[stageId];
-        const contentArea = document.getElementById('contentArea');
-        
-        let toolsHtml = '';
-        stage.tools.forEach((tool, index) => {
-            const isModal = tool.type === 'modal';
-            let buttonsHtml = '';
-            
-            // 处理弹窗按钮
-            if (isModal) {
-                buttonsHtml += `<button class="action-btn modal-btn" data-modal="${stageId}-${index}">查看提示词</button>`;
-            }
-            
-            // 处理 links 数组（多个链接）
-            if (tool.links && Array.isArray(tool.links)) {
-                tool.links.forEach(linkItem => {
-                    const btnText = linkItem.text || '访问官网';
-                    const btnUrl = linkItem.url || '#';
-                    
-                    if (btnUrl.startsWith('stage:')) {
-                        const targetStage = btnUrl.replace('stage:', '');
-                        buttonsHtml += `<a href="#" class="action-btn" onclick="return goToStage('${targetStage}')">${btnText}</a>`;
-                    } else {
-                        buttonsHtml += `<a href="${btnUrl}" target="_blank" class="action-btn">${btnText}</a>`;
-                    }
-                });
-            } 
-            // 兼容旧的 link 参数（单个链接）
-            else if (tool.link) {
-                const isInternalLink = tool.link.startsWith('stage:');
-                if (isInternalLink) {
-                    const targetStage = tool.link.replace('stage:', '');
-                    buttonsHtml += `<a href="#" class="action-btn" onclick="return goToStage('${targetStage}')">访问官网</a>`;
-                } else {
-                    buttonsHtml += `<a href="${tool.link}" target="_blank" class="action-btn">访问官网</a>`;
-                }
-            }
-            
-            toolsHtml += `
-                <div class="tool-card">
-                    <div class="tag-row">
-                        ${tool.tags.map((tag, idx) => `<span class="tag tag-color-${idx % 3}">${tag}</span>`).join('')}
-                    </div>
-                    <div class="tool-name">${tool.name}</div>
-                    <p class="tool-desc">${tool.desc}</p>
-                    <div class="btn-group">${buttonsHtml}</div>
-                </div>
-            `;
-        });
-
-        contentArea.innerHTML = `
-            <div class="content-header">
-                <h2>${stage.title}</h2>
-                <p>${stage.desc}</p>
-            </div>
-            <div class="tool-grid">
-                ${toolsHtml}
-            </div>
-        `;
-        
-        // 绑定弹窗事件
-        bindModalEvents(stageId);
-    }
-    
-    function bindModalEvents(stageId) {
-        document.querySelectorAll('.modal-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const modalId = this.dataset.modal;
-                const [stage, index] = modalId.split('-');
-                const tool = data[stage].tools[index];
-                showModal(tool);
+    // ==================== 工具函数 ====================
+    // 获取所有标签及其出现次数
+    function collectAllTags() {
+        const tagCount = {};
+        document.querySelectorAll('.tool-card').forEach(card => {
+            card.querySelectorAll('.tag').forEach(tagEl => {
+                const tag = tagEl.textContent.trim();
+                tagCount[tag] = (tagCount[tag] || 0) + 1;
             });
         });
+        return Object.entries(tagCount)
+            .sort((a, b) => b[1] - a[1])
+            .map(([tag, count]) => ({ tag, count }));
     }
-    
-    function showModal(tool) {
-        const promptText = tool.prompt || '暂无提示词内容';
+
+    // 判断卡片是否匹配
+    function isCardVisible(card) {
+        const name = card.querySelector('.tool-name').textContent.toLowerCase();
+        const desc = card.querySelector('.tool-desc').textContent.toLowerCase();
+        const tags = Array.from(card.querySelectorAll('.tag')).map(t => t.textContent.toLowerCase());
+        
+        // 标签筛选
+        if (activeFilters.length > 0) {
+            if (filterMode === 'AND') {
+                // AND: 必须包含所有选中标签
+                const hasAllTags = activeFilters.every(f => tags.includes(f.toLowerCase()));
+                if (!hasAllTags) return false;
+            } else {
+                // OR: 包含任一选中标签
+                const hasAnyTag = activeFilters.some(f => tags.includes(f.toLowerCase()));
+                if (!hasAnyTag) return false;
+            }
+        }
+        
+        // 搜索匹配
+        if (searchQuery) {
+            const q = searchQuery.toLowerCase();
+            if (!name.includes(q) && !desc.includes(q) && !tags.some(t => t.includes(q))) {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+
+    // 高亮搜索文字
+    function highlightText(text, query) {
+        if (!query) return text;
+        const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const regex = new RegExp(`(${escaped})`, 'gi');
+        return text.replace(regex, '<span class="highlight">$1</span>');
+    }
+
+    // ==================== 渲染函数 ====================
+    function renderFilterTags() {
+        const allTags = collectAllTags();
+        const container = document.getElementById('filterTags');
+        const displayTags = allTags.filter(t => t.count >= 2).slice(0, 15);
+        
+        container.innerHTML = displayTags.map(({ tag, count }) => `
+            <button class="filter-tag ${activeFilters.includes(tag) ? 'active' : ''}" 
+                    data-tag="${tag}">
+                ${tag} <span class="count">${count}</span>
+            </button>
+        `).join('');
+        
+        container.querySelectorAll('.filter-tag').forEach(btn => {
+            btn.addEventListener('click', () => toggleFilter(btn.dataset.tag));
+        });
+        
+        document.getElementById('filterClear').classList.toggle('visible', activeFilters.length > 0);
+    }
+
+    function applyFilters() {
+        let totalVisible = 0;
+        let totalTools = 0;
+        const visibleCards = [];
+        
+        document.querySelectorAll('.section').forEach(section => {
+            const cards = section.querySelectorAll('.tool-card');
+            let sectionVisible = 0;
+            
+            cards.forEach(card => {
+                totalTools++;
+                const visible = isCardVisible(card);
+                card.classList.toggle('hidden', !visible);
+                
+                // 高亮文字
+                const nameEl = card.querySelector('.tool-name');
+                const descEl = card.querySelector('.tool-desc');
+                nameEl.innerHTML = highlightText(nameEl.textContent, searchQuery);
+                descEl.innerHTML = highlightText(descEl.textContent, searchQuery);
+                
+                if (visible) {
+                    sectionVisible++;
+                    totalVisible++;
+                    visibleCards.push(card.cloneNode(true));
+                }
+            });
+            
+            // 更新栏目统计
+            const countEl = section.querySelector('.section-header .count');
+            if (countEl) {
+                countEl.textContent = sectionVisible;
+            }
+        });
+        
+        // 更新全局统计
+        document.getElementById('totalTools').textContent = totalTools;
+        document.getElementById('visibleCount').textContent = totalVisible;
+        
+        // 判断是否需要切换到筛选结果视图
+        const hasFilters = activeFilters.length > 0 || searchQuery.length > 0;
+        
+        if (hasFilters && !isFilteredView) {
+            switchToFilteredView(visibleCards);
+        } else if (!hasFilters && isFilteredView) {
+            switchToSectionView();
+        } else if (hasFilters) {
+            updateFilteredResults(visibleCards);
+        }
+    }
+
+    function switchToFilteredView(visibleCards) {
+        isFilteredView = true;
+        
+        // 隐藏所有栏目
+        document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
+        
+        // 显示筛选结果区域
+        const filterResults = document.getElementById('filterResults');
+        const filterResultsGrid = document.getElementById('filterResultsGrid');
+        
+        document.getElementById('filterResultsCount').textContent = visibleCards.length;
+        filterResultsGrid.innerHTML = '';
+        
+        visibleCards.forEach(card => {
+            const clonedCard = card.cloneNode(true);
+            // 重新绑定弹窗按钮
+            clonedCard.querySelectorAll('.modal-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const title = this.closest('.tool-card').querySelector('.tool-name').textContent;
+                    const prompt = this.dataset.prompt;
+                    showModal(title, prompt);
+                });
+            });
+            filterResultsGrid.appendChild(clonedCard);
+        });
+        
+        filterResults.classList.add('active');
+    }
+
+    function updateFilteredResults(visibleCards) {
+        document.getElementById('filterResultsCount').textContent = visibleCards.length;
+        const filterResultsGrid = document.getElementById('filterResultsGrid');
+        filterResultsGrid.innerHTML = '';
+        
+        visibleCards.forEach(card => {
+            const clonedCard = card.cloneNode(true);
+            clonedCard.querySelectorAll('.modal-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const title = this.closest('.tool-card').querySelector('.tool-name').textContent;
+                    const prompt = this.dataset.prompt;
+                    showModal(title, prompt);
+                });
+            });
+            filterResultsGrid.appendChild(clonedCard);
+        });
+    }
+
+    function switchToSectionView() {
+        isFilteredView = false;
+        
+        // 显示所有栏目
+        document.querySelectorAll('.section').forEach(s => s.style.display = '');
+        
+        // 隐藏筛选结果区域
+        document.getElementById('filterResults').classList.remove('active');
+    }
+
+    function updateSidebarHighlight() {
+        // 筛选视图时不更新侧边栏高亮
+        if (isFilteredView) return;
+        
+        const sections = document.querySelectorAll('.section');
+        const navItems = document.querySelectorAll('.nav-item');
+        let currentSection = null;
+        
+        sections.forEach(section => {
+            const rect = section.getBoundingClientRect();
+            if (rect.top <= 200) {
+                currentSection = section;
+            }
+        });
+        
+        navItems.forEach(item => {
+            const isActive = currentSection && item.dataset.section === currentSection.dataset.section;
+            item.classList.toggle('active', isActive);
+        });
+    }
+
+    // ==================== 事件处理 ====================
+    function toggleFilter(tag) {
+        const idx = activeFilters.indexOf(tag);
+        if (idx === -1) {
+            activeFilters.push(tag);
+        } else {
+            activeFilters.splice(idx, 1);
+        }
+        renderFilterTags();
+        applyFilters();
+    }
+
+    function clearFilters() {
+        activeFilters = [];
+        searchQuery = '';
+        document.getElementById('searchInput').value = '';
+        document.getElementById('searchBox').classList.remove('has-value');
+        renderFilterTags();
+        applyFilters();
+    }
+
+    function switchFilterMode(mode) {
+        filterMode = mode;
+        document.querySelectorAll('.filter-mode-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.mode === mode);
+        });
+        applyFilters();
+    }
+
+    function showModal(title, prompt) {
         const modalHtml = `
             <div class="modal-overlay" id="modalOverlay">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h3>${tool.name}</h3>
+                        <h3>${title}</h3>
                         <button class="modal-close" onclick="closeModal()">&times;</button>
                     </div>
                     <div class="modal-body">
                         <div class="modal-prompt">
                             <div class="modal-prompt-header">
                                 <h4>提示词模板</h4>
-                                <button class="copy-btn" onclick="copyPrompt(this, \`${escapeHtml(promptText)}\`)">
+                                <button class="copy-btn" onclick="copyPrompt(this, \`${escapeHtml(prompt)}\`)">
                                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                         <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
                                         <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
@@ -543,7 +1381,7 @@
                                     复制
                                 </button>
                             </div>
-                            <pre>${escapeHtml(promptText)}</pre>
+                            <pre>${escapeHtml(prompt)}</pre>
                         </div>
                     </div>
                 </div>
@@ -554,13 +1392,13 @@
             if (e.target === this) closeModal();
         });
     }
-    
+
     function escapeHtml(text) {
         const div = document.createElement('div');
         div.textContent = text;
         return div.innerHTML;
     }
-    
+
     async function copyPrompt(btn, text) {
         try {
             await navigator.clipboard.writeText(text);
@@ -583,40 +1421,109 @@
             }, 2000);
         } catch (err) {
             console.error('复制失败:', err);
-            btn.textContent = '复制失败';
         }
     }
-    
+
     function closeModal() {
         const modal = document.getElementById('modalOverlay');
         if (modal) modal.remove();
     }
 
-    // 绑定侧边栏点击事件
-    document.querySelectorAll('.nav-item').forEach(item => {
-        item.addEventListener('click', function() {
-            switchStage(this.dataset.stage);
+    // ==================== 初始化 ====================
+    function init() {
+        renderFilterTags();
+        applyFilters();
+        
+        // 滚动监听
+        window.addEventListener('scroll', updateSidebarHighlight);
+        updateSidebarHighlight();
+        
+        // 侧边栏点击平滑滚动
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                // 如果在筛选视图，先返回
+                if (isFilteredView) {
+                    switchToSectionView();
+                    clearFilters();
+                }
+                const sectionId = this.dataset.section;
+                const section = document.getElementById(sectionId);
+                if (section) {
+                    const top = section.offsetTop - 140;
+                    window.scrollTo({ top, behavior: 'smooth' });
+                }
+            });
         });
-    });
-    
-    // 切换到指定 stage
-    function switchStage(stageId) {
-        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-        const targetNav = document.querySelector(`.nav-item[data-stage="${stageId}"]`);
-        if (targetNav) {
-            targetNav.classList.add('active');
-            renderStage(stageId);
-        }
+        
+        // AND/OR 切换
+        document.querySelectorAll('.filter-mode-btn').forEach(btn => {
+            btn.addEventListener('click', () => switchFilterMode(btn.dataset.mode));
+        });
+        
+        // 返回栏目视图按钮
+        document.getElementById('backToSections').addEventListener('click', () => {
+            switchToSectionView();
+        });
+        
+        // 搜索输入
+        const searchInput = document.getElementById('searchInput');
+        const searchBox = document.getElementById('searchBox');
+        const searchClear = document.getElementById('searchClear');
+        
+        searchInput.addEventListener('input', (e) => {
+            searchQuery = e.target.value.trim();
+            searchBox.classList.toggle('has-value', searchQuery.length > 0);
+            applyFilters();
+        });
+        
+        searchClear.addEventListener('click', () => {
+            searchInput.value = '';
+            searchQuery = '';
+            searchBox.classList.remove('has-value');
+            searchInput.focus();
+            applyFilters();
+        });
+        
+        // 清除筛选
+        document.getElementById('filterClear').addEventListener('click', () => {
+            clearFilters();
+            switchToSectionView();
+        });
+        
+        // 弹窗按钮
+        document.querySelectorAll('.modal-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const title = this.closest('.tool-card').querySelector('.tool-name').textContent;
+                const prompt = this.dataset.prompt;
+                showModal(title, prompt);
+            });
+        });
+        
+        // 键盘快捷键
+        document.addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                e.preventDefault();
+                searchInput.focus();
+                searchInput.select();
+            }
+            if (e.key === 'Escape') {
+                const modal = document.getElementById('modalOverlay');
+                if (modal) {
+                    closeModal();
+                } else if (searchQuery || activeFilters.length > 0) {
+                    clearFilters();
+                    switchToSectionView();
+                }
+            }
+        });
     }
-    
-    // 全局函数：从卡片链接跳转到指定 stage
-    window.goToStage = function(stageId) {
-        switchStage(stageId);
-        return false;
-    };
 
-    // 初始渲染第一项
-    renderStage('llm');
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
 </script>
 
 </body>
