@@ -27,28 +27,26 @@
 
         /* ========== 顶部工具栏 ========== */
         .top-bar {
-            position: fixed;
+            position: sticky;
             top: 0;
-            left: 280px;
-            right: 0;
             background: var(--card-bg);
             border-bottom: 1px solid var(--border-color);
             padding: 16px 40px;
             z-index: 50;
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 12px;
         }
 
         .top-row {
             display: flex;
             align-items: center;
-            gap: 24px;
+            gap: 20px;
         }
 
         .search-box {
             flex: 1;
-            max-width: 400px;
+            max-width: 360px;
             position: relative;
         }
         .search-box input {
@@ -116,19 +114,50 @@
 
         .filter-row {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             gap: 12px;
-            flex-wrap: wrap;
         }
         .filter-label {
             font-size: 0.85rem;
             color: var(--text-muted);
             font-weight: 500;
         }
+        .filter-tags-wrapper {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            flex: 1;
+            min-width: 0;
+        }
         .filter-tags {
             display: flex;
             gap: 8px;
             flex-wrap: wrap;
+            max-height: 32px;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            flex: 1;
+        }
+        .filter-tags.expanded {
+            max-height: none;
+        }
+        .filter-tags-toggle {
+            padding: 5px 10px;
+            border-radius: 16px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            background: var(--card-bg);
+            border: 1px dashed var(--border-color);
+            color: var(--text-muted);
+            transition: all 0.2s;
+            white-space: nowrap;
+            height: 32px;
+            line-height: 1;
+        }
+        .filter-tags-toggle:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            border-style: solid;
         }
         .filter-tag {
             padding: 5px 12px;
@@ -156,17 +185,40 @@
             font-size: 0.75rem;
         }
         .filter-clear {
-            padding: 5px 12px;
-            border-radius: 16px;
+            padding: 4px 12px;
+            border-radius: 8px;
             font-size: 0.8rem;
             cursor: pointer;
-            background: none;
-            border: 1px dashed var(--border-color);
-            color: var(--text-muted);
+            background: #fee2e2;
+            border: 1px solid #fca5a5;
+            color: #dc2626;
             display: none;
+            font-family: inherit;
+            transition: all 0.2s;
         }
         .filter-clear.visible { display: block; }
-        .filter-clear:hover { border-color: var(--primary); color: var(--primary); }
+        .filter-clear:hover {
+            background: #fecaca;
+            border-color: #f87171;
+        }
+
+        /* 关于按钮 */
+        .about-btn {
+            padding: 6px 16px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            background: var(--bg-body);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            transition: all 0.2s;
+            font-family: inherit;
+            white-space: nowrap;
+        }
+        .about-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
 
         /* AND/OR 切换 */
         .filter-mode-toggle {
@@ -213,6 +265,11 @@
             margin-bottom: 30px;
             padding-bottom: 20px;
             border-bottom: 1px solid var(--border-color);
+        }
+        .filter-results-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
         .filter-results-header h2 {
             font-size: 1.4rem;
@@ -272,9 +329,9 @@
             border-left: 4px solid transparent;
             text-decoration: none;
         }
-        .nav-item:hover { background: #1e293b; color: #fff; }
+        .nav-item:hover { background: rgba(148, 163, 184, 0.1); color: #f1f5f9; }
         .nav-item.active {
-            background: #1e293b;
+            background: rgba(37, 99, 235, 0.1);
             color: #fff;
             border-left-color: var(--primary);
         }
@@ -296,7 +353,7 @@
         /* ========== 主内容区（长滚动） ========== */
         .main-content {
             margin-left: 280px;
-            padding-top: 140px;
+            padding-top: 0;
         }
 
         .section {
@@ -310,6 +367,8 @@
 
         .section-header {
             margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--border-color);
         }
         .section-header h2 {
             font-size: 1.6rem;
@@ -365,16 +424,16 @@
             background: var(--card-bg);
             border-radius: 16px;
             padding: 24px;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -2px rgba(0,0,0,0.05);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
             transition: all 0.3s;
             display: flex;
             flex-direction: column;
             border: 1px solid var(--border-color);
         }
         .tool-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
-            border-color: #bfdbfe;
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.12);
+            border-color: rgba(37, 99, 235, 0.3);
         }
         .tool-card.hidden { display: none; }
 
@@ -533,8 +592,8 @@
         @media (max-width: 768px) {
             .sidebar { width: 70px; }
             .sidebar-header, .nav-item span:not(.step-num) { display: none; }
-            .main-content { margin-left: 70px; padding-top: 120px; }
-            .top-bar { left: 70px; padding: 12px 20px; }
+            .main-content { margin-left: 70px; padding-top: 0; }
+            .top-bar { padding: 12px 20px; }
             .stats-bar { display: none; }
             .search-box { max-width: none; }
             .section { padding: 30px 20px; }
@@ -543,671 +602,625 @@
 </head>
 <body>
 
-<!-- ========== 顶部工具栏 ========== -->
-<div class="top-bar">
-    <div class="top-row">
-        <div class="search-box" id="searchBox">
-            <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="11" cy="11" r="8"></circle>
-                <path d="m21 21-4.35-4.35"></path>
-            </svg>
-            <input type="text" id="searchInput" placeholder="搜索工具、标签... (Ctrl+K)">
-            <button class="search-clear" id="searchClear">&times;</button>
-        </div>
-        <div class="stats-bar">
-            <div class="stat-item">
-                <span>工具总数</span>
-                <span class="stat-num" id="totalTools">0</span>
-            </div>
-            <div class="stat-item">
-                <span>显示</span>
-                <span class="stat-num" id="visibleCount">0</span>
-            </div>
-        </div>
-    </div>
-    <div class="filter-row">
-        <span class="filter-label">标签筛选:</span>
-        <div class="filter-mode-toggle" id="filterModeToggle">
-            <button class="filter-mode-btn active" data-mode="AND">AND</button>
-            <button class="filter-mode-btn" data-mode="OR">OR</button>
-        </div>
-        <div class="filter-tags" id="filterTags"></div>
-        <button class="filter-clear" id="filterClear">清除筛选</button>
-    </div>
-</div>
-
 <!-- ========== 侧边栏 ========== -->
-<div class="sidebar">
+<div class="sidebar" role="navigation" aria-label="栏目导航">
     <div class="sidebar-header">
         <h1>My AI Toolbox</h1>
         <p>全流程提质增效指南</p>
     </div>
     <ul class="nav-list" id="navList">
-        <li><a href="#llm" class="nav-item" data-section="llm"><span class="step-num">00</span><span>国产基座大模型</span></a></li>
-        <li><a href="#info" class="nav-item" data-section="info"><span class="step-num">01</span><span>信息收集与需求分析</span></a></li>
-        <li><a href="#design" class="nav-item" data-section="design"><span class="step-num">02</span><span>产品定义与视觉设计</span></a></li>
-        <li><a href="#execution" class="nav-item" data-section="execution"><span class="step-num">03</span><span>开发试验与氛围编程</span></a></li>
-        <li><a href="#analysis" class="nav-item" data-section="analysis"><span class="step-num">04</span><span>数据统计分析挖掘</span></a></li>
-        <li><a href="#agent" class="nav-item" data-section="agent"><span class="step-num">05</span><span>Agent与自动化</span></a></li>
-        <li><a href="#work" class="nav-item" data-section="work"><span class="step-num">06</span><span>其他办公事务</span></a></li>
+        <!-- 由 JS 动态渲染 -->
     </ul>
-    <div class="sidebar-footer">
-        本工具集均为国内环境可用<br>
-        最后更新：2026.04.16
-    </div>
 </div>
 
 <!-- ========== 主内容区 ========== -->
 <div class="main-content">
 
+    <!-- ========== 顶部工具栏 ========== -->
+    <div class="top-bar">
+        <div class="top-row">
+            <div class="search-box" id="searchBox">
+                <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <path d="m21 21-4.35-4.35"></path>
+                </svg>
+                <input type="text" id="searchInput" placeholder="搜索工具、标签... (Ctrl+K)" aria-label="搜索工具或标签" role="searchbox">
+                <button class="search-clear" id="searchClear" aria-label="清空搜索">&times;</button>
+            </div>
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <span>工具总数</span>
+                    <span class="stat-num" id="totalTools">0</span>
+                </div>
+                <div class="stat-item">
+                    <span>显示</span>
+                    <span class="stat-num" id="visibleCount">0</span>
+                </div>
+            </div>
+            <button class="about-btn" id="aboutBtn" aria-label="关于本工具集">关于</button>
+        </div>
+        <div class="filter-row">
+            <span class="filter-label">标签筛选:</span>
+            <div class="filter-mode-toggle" id="filterModeToggle">
+                <button class="filter-mode-btn active" data-mode="ONLY">ONLY</button>
+                <button class="filter-mode-btn" data-mode="AND">AND</button>
+                <button class="filter-mode-btn" data-mode="OR">OR</button>
+            </div>
+            <div class="filter-tags-wrapper">
+                <div class="filter-tags" id="filterTags"></div>
+                <button class="filter-tags-toggle" id="filterTagsToggle">更多 ▼</button>
+            </div>
+        </div>
+    </div>
+
     <!-- 筛选结果区域 -->
     <div class="filter-results" id="filterResults">
         <div class="filter-results-header">
-            <h2>筛选结果 (<span id="filterResultsCount">0</span>)</h2>
+            <div class="filter-results-title">
+                <h2>筛选结果 (<span id="filterResultsCount">0</span>)</h2>
+                <button class="filter-clear" id="filterClear">清除筛选</button>
+            </div>
             <button class="back-to-sections" id="backToSections">← 返回栏目视图</button>
         </div>
         <div class="filter-results-grid" id="filterResultsGrid"></div>
     </div>
 
-    <!-- 国产基座大模型 -->
-    <section class="section" id="llm" data-section="llm">
-        <div class="section-header">
-            <h2><span class="section-num">00</span>国产基座大模型</h2>
-            <p>为各类上层产品提供基础智能的LLM们，几乎每一家都已经自带了能力更全面的通用型Agent产品。</p>
-            <p class="tool-count">共 <span class="count">0</span> 个工具</p>
-            <p class="hidden-note">部分工具因筛选条件隐藏</p>
-        </div>
-        <div class="tool-grid" data-stage="llm">
-            <div class="tool-card" data-tool="GLM">
-                <div class="tag-row"><span class="tag tag-color-0">LLM</span><span class="tag tag-color-1">Agent</span></div>
-                <div class="tool-name">GLM</div>
-                <p class="tool-desc">智谱AI推出，清华系，中文环境优先选用，基本上一更新就是开源第一。两个链接分别为产品端（功能丰富）和模型端（纯净界面）。</p>
-                <div class="btn-group">
-                    <a href="https://chatglm.cn/" target="_blank" class="action-btn">智谱清言</a>
-                    <a href="https://chat.z.ai/" target="_blank" class="action-btn">Z.ai</a>
-                </div>
-            </div>
-            <div class="tool-card" data-tool="MiniMax">
-                <div class="tag-row"><span class="tag tag-color-0">LLM</span><span class="tag tag-color-1">Agent</span></div>
-                <div class="tool-name">MiniMax</div>
-                <p class="tool-desc">稀宇科技推出，综合能力强大，推荐下载桌面版（全能工作台）。</p>
-                <div class="btn-group">
-                    <a href="https://agent.minimaxi.com/" target="_blank" class="action-btn">访问官网</a>
-                </div>
-            </div>
-            <div class="tool-card" data-tool="Kimi">
-                <div class="tag-row"><span class="tag tag-color-0">LLM</span><span class="tag tag-color-1">Agent</span></div>
-                <div class="tool-name">Kimi</div>
-                <p class="tool-desc">月之暗面推出，适合多模态场景，前端能力较好，但目前算力不足，经常繁忙。有桌面版（AI浏览器类）。</p>
-                <div class="btn-group">
-                    <a href="https://www.kimi.com/" target="_blank" class="action-btn">访问官网</a>
-                </div>
-            </div>
-            <div class="tool-card" data-tool="Qwen">
-                <div class="tag-row"><span class="tag tag-color-0">LLM</span><span class="tag tag-color-1">Agent</span></div>
-                <div class="tool-name">Qwen</div>
-                <p class="tool-desc">阿里通义千问系列，长期开源榜一，和前3个基本是国产王者轮座。两个链接分别为产品端和模型端。</p>
-                <div class="btn-group">
-                    <a href="https://www.qianwen.com/" target="_blank" class="action-btn">千问</a>
-                    <a href="https://chat.qwen.ai/" target="_blank" class="action-btn">Qwen chat</a>
-                </div>
-            </div>
-            <div class="tool-card" data-tool="DeepSeek">
-                <div class="tag-row"><span class="tag tag-color-0">LLM</span><span class="tag tag-color-1">Agent</span></div>
-                <div class="tool-name">DeepSeek</div>
-                <p class="tool-desc">深度求索推出，永远有一席之地，最新版的长文本注意力机制很强，在多轮对话中能记住更多历史细节。【新出了专家模式】</p>
-                <div class="btn-group">
-                    <a href="https://chat.deepseek.com/" target="_blank" class="action-btn">访问官网</a>
-                </div>
-            </div>
-            <div class="tool-card" data-tool="豆包-Seed">
-                <div class="tag-row"><span class="tag tag-color-0">LLM</span><span class="tag tag-color-1">Agent</span></div>
-                <div class="tool-name">豆包-Seed</div>
-                <p class="tool-desc">字节跳动推出，工作生活娱乐皆可，支持自建Agent（固化系统提示词），有桌面版（AI浏览器类，官方支持部署模型到本地，但需有适配的硬件）。【其专家模式是写长文最佳实践之一】</p>
-                <div class="btn-group">
-                    <a href="https://www.doubao.com/chat/" target="_blank" class="action-btn">访问官网</a>
-                </div>
-            </div>
-            <div class="tool-card" data-tool="Step">
-                <div class="tag-row"><span class="tag tag-color-0">LLM</span><span class="tag tag-color-1">Agent</span></div>
-                <div class="tool-name">Step</div>
-                <p class="tool-desc">阶跃星辰推出，桌面版（全能工作台）也极具竞争力。</p>
-                <div class="btn-group">
-                    <a href="https://www.stepfun.com/chats/new" target="_blank" class="action-btn">访问官网</a>
-                </div>
-            </div>
-            <div class="tool-card" data-tool="文心ERNIE">
-                <div class="tag-row"><span class="tag tag-color-0">LLM</span><span class="tag tag-color-1">Agent</span></div>
-                <div class="tool-name">文心ERNIE</div>
-                <p class="tool-desc">百度推出，可以试试。</p>
-                <div class="btn-group">
-                    <a href="https://yiyan.baidu.com/" target="_blank" class="action-btn">访问官网</a>
-                </div>
-            </div>
-            <div class="tool-card" data-tool="混元">
-                <div class="tag-row"><span class="tag tag-color-0">LLM</span><span class="tag tag-color-1">Agent</span></div>
-                <div class="tool-name">混元</div>
-                <p class="tool-desc">腾讯推出，可以试试。</p>
-                <div class="btn-group">
-                    <a href="https://hunyuan.tencent.com" target="_blank" class="action-btn">访问官网</a>
-                </div>
-            </div>
-            <div class="tool-card" data-tool="天工Skywork">
-                <div class="tag-row"><span class="tag tag-color-0">LLM</span><span class="tag tag-color-1">Agent</span></div>
-                <div class="tool-name">天工Skywork</div>
-                <p class="tool-desc">昆仑万维推出，可以试试。</p>
-                <div class="btn-group">
-                    <a href="https://www.tiangong.cn/" target="_blank" class="action-btn">访问官网</a>
-                </div>
-            </div>
-            <div class="tool-card" data-tool="Longcat">
-                <div class="tag-row"><span class="tag tag-color-0">LLM</span><span class="tag tag-color-1">Agent</span></div>
-                <div class="tool-name">Longcat</div>
-                <p class="tool-desc">美团推出，可以试试。</p>
-                <div class="btn-group">
-                    <a href="https://longcat.chat/" target="_blank" class="action-btn">访问官网</a>
-                </div>
-            </div>
-            <div class="tool-card" data-tool="MIMO">
-                <div class="tag-row"><span class="tag tag-color-0">LLM</span><span class="tag tag-color-1">Agent</span></div>
-                <div class="tool-name">MIMO</div>
-                <p class="tool-desc">小米推出，可以试试。还有小米版云龙虾MiClaw</p>
-                <div class="btn-group">
-                    <a href="https://aistudio.xiaomimimo.com/#/" target="_blank" class="action-btn">访问官网</a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- 信息收集与需求分析 -->
-    <section class="section" id="info" data-section="info">
-        <div class="section-header">
-            <h2><span class="section-num">01</span>信息收集与需求分析</h2>
-            <p>此阶段重点在于快速理解行业背景、捕捉客户痛点并输出高质量方案大纲。利用 AI 提升调研深度和响应速度。</p>
-            <p class="tool-count">共 <span class="count">0</span> 个工具</p>
-            <p class="hidden-note">部分工具因筛选条件隐藏</p>
-        </div>
-        <div class="tool-grid" data-stage="info">
-            <div class="tool-card" data-tool="灵光">
-                <div class="tag-row"><span class="tag tag-color-0">搜索</span><span class="tag tag-color-1">APP</span></div>
-                <div class="tool-name">灵光</div>
-                <p class="tool-desc">蚂蚁集团推出的，适当篇幅、总分总的输出排版形式十分适合知识问答学习，适合灵光一闪时的提问，建议下载手机APP。</p>
-                <div class="btn-group">
-                    <a href="https://www.lingguang.com/chat" target="_blank" class="action-btn">访问官网</a>
-                </div>
-            </div>
-            <div class="tool-card" data-tool="秘塔AI搜索">
-                <div class="tag-row"><span class="tag tag-color-0">搜索</span></div>
-                <div class="tool-name">秘塔AI搜索</div>
-                <p class="tool-desc">秘塔科技推出，无广告搜索引擎，提供直接精准的答案，支持自动生成大纲和思维导图。</p>
-                <div class="btn-group">
-                    <a href="https://metaso.cn/" target="_blank" class="action-btn">访问官网</a>
-                </div>
-            </div>
-            <div class="tool-card" data-tool="AMiner">
-                <div class="tag-row"><span class="tag tag-color-0">搜索</span></div>
-                <div class="tool-name">AMiner</div>
-                <p class="tool-desc">智谱推出的AI学术搜索。</p>
-                <div class="btn-group">
-                    <a href="https://www.aminer.cn/" target="_blank" class="action-btn">访问官网</a>
-                </div>
-            </div>
-            <div class="tool-card" data-tool="豆包">
-                <div class="tag-row"><span class="tag tag-color-0">LLM</span><span class="tag tag-color-1">Agent</span></div>
-                <div class="tool-name">豆包</div>
-                <p class="tool-desc">开思考或专家模式，信息检索的幻觉率基本是国内最低的。</p>
-                <div class="btn-group">
-                    <a href="https://www.doubao.com/chat/" target="_blank" class="action-btn">访问官网</a>
-                </div>
-            </div>
-            <div class="tool-card" data-tool="万能调研提示词">
-                <div class="tag-row"><span class="tag tag-color-2">提示词</span></div>
-                <div class="tool-name">万能调研提示词</div>
-                <p class="tool-desc">公众号大佬-卡兹克推荐</p>
-                <div class="btn-group">
-                    <a href="https://mp.weixin.qq.com/s/Y_uRMYBmdLWUPnz_ac7jWA" target="_blank" class="action-btn">访问官网</a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- 产品定义与视觉设计 -->
-    <section class="section" id="design" data-section="design">
-        <div class="section-header">
-            <h2><span class="section-num">02</span>产品定义与视觉设计</h2>
-            <p>将需求具象化为 PRD 和原型。AI 可辅助生成描述、补全边界条件以及快速产出 UI 视觉稿。</p>
-            <p class="tool-count">共 <span class="count">0</span> 个工具</p>
-            <p class="hidden-note">部分工具因筛选条件隐藏</p>
-        </div>
-        <div class="tool-grid" data-stage="design">
-            <div class="tool-card" data-tool="AI BUDDY">
-                <div class="tag-row"><span class="tag tag-color-0">产品经理</span></div>
-                <div class="tool-name">AI BUDDY</div>
-                <p class="tool-desc">某产品经理自制的AI搭子，产品设计全流程的思路辅助，很有参考价值</p>
-                <div class="btn-group">
-                    <a href="https://aipair.kkjm.space/" target="_blank" class="action-btn">访问官网</a>
-                </div>
-            </div>
-            <div class="tool-card" data-tool="MasterGo">
-                <div class="tag-row"><span class="tag tag-color-0">原型UI</span></div>
-                <div class="tool-name">MasterGo</div>
-                <p class="tool-desc">莫高AI推出，用语言描述来画原型的最佳选择之一。</p>
-                <div class="btn-group">
-                    <a href="https://mastergo.com/" target="_blank" class="action-btn">访问官网</a>
-                </div>
-            </div>
-            <div class="tool-card" data-tool="星流">
-                <div class="tag-row"><span class="tag tag-color-0">原型UI</span></div>
-                <div class="tool-name">星流</div>
-                <p class="tool-desc">LiblibAI推出，辅助设计</p>
-                <div class="btn-group">
-                    <a href="https://www.xingliu.art/" target="_blank" class="action-btn">访问官网</a>
-                </div>
-            </div>
-            <div class="tool-card" data-tool="Kimi PPT助手">
-                <div class="tag-row"><span class="tag tag-color-1">PPT</span></div>
-                <div class="tool-name">Kimi PPT助手</div>
-                <p class="tool-desc">组件式AI PPT的好选择之一（以前和AI PPT合作，现在好像没了，模板变少了）</p>
-                <div class="btn-group">
-                    <a href="https://www.kimi.com/slides" target="_blank" class="action-btn">访问官网</a>
-                </div>
-            </div>
-            <div class="tool-card" data-tool="MiniMax Agent">
-                <div class="tag-row"><span class="tag tag-color-1">PPT</span><span class="tag tag-color-2">全能型</span></div>
-                <div class="tool-name">MiniMax Agent</div>
-                <p class="tool-desc">生图式AI PPT的最佳选择（但最近官方更新了skill换成组件式和生图式结合，感觉美学变差了），此外其他功能也很强大</p>
-                <div class="btn-group">
-                    <a href="https://agent.minimaxi.com/" target="_blank" class="action-btn">访问官网</a>
-                </div>
-            </div>
-            <div class="tool-card" data-tool="ProcessOn">
-                <div class="tag-row"><span class="tag tag-color-0">流程图</span><span class="tag tag-color-1">思维导图</span><span class="tag tag-color-2">架构图</span></div>
-                <div class="tool-name">ProcessOn</div>
-                <p class="tool-desc">在线制图比较方便，也支持AI辅助</p>
-                <div class="btn-group">
-                    <a href="https://www.processon.com" target="_blank" class="action-btn">访问官网</a>
-                </div>
-            </div>
-            <div class="tool-card" data-tool="iSlide">
-                <div class="tag-row"><span class="tag tag-color-1">PPT</span><span class="tag tag-color-2">插件</span></div>
-                <div class="tool-name">iSlide</div>
-                <p class="tool-desc">PPT插件工具和模板平台iSlide推出的AI PPT生成和设计工具，旨在辅助用户更快、更高效地制作和优化PPT演示文稿</p>
-                <div class="btn-group">
-                    <a href="https://www.islide.cc/?mtm_campaign=ai-bot" target="_blank" class="action-btn">访问官网</a>
-                </div>
-            </div>
-            <div class="tool-card" data-tool="Napkin">
-                <div class="tag-row"><span class="tag tag-color-1">PPT</span></div>
-                <div class="tool-name">Napkin</div>
-                <p class="tool-desc">将文字转化为视觉内容，让分享想法变得快速高效</p>
-                <div class="btn-group">
-                    <a href="https://www.napkin.ai/" target="_blank" class="action-btn">访问官网</a>
-                </div>
-            </div>
-            <div class="tool-card" data-tool="next-ai-drawio">
-                <div class="tag-row"><span class="tag tag-color-0">AI</span><span class="tag tag-color-2">架构图</span></div>
-                <div class="tool-name">next-ai-drawio</div>
-                <p class="tool-desc">用自然语言描述生成可编辑的架构图</p>
-                <div class="btn-group">
-                    <a href="https://next-ai-drawio.jiang.jp/zh" target="_blank" class="action-btn">访问官网</a>
-                </div>
-            </div>
-            <div class="tool-card" data-tool="Mermaid">
-                <div class="tag-row"><span class="tag tag-color-0">流程图</span><span class="tag tag-color-1">思维导图</span><span class="tag tag-color-2">架构图</span></div>
-                <div class="tool-name">Mermaid</div>
-                <p class="tool-desc">基于 JavaScript 的开源图表绘制工具‌，它允许用户通过类似 Markdown 的文本语法来创建和渲染各类图表，无需使用传统拖拽式绘图软件</p>
-                <div class="btn-group">
-                    <a href="https://mermaid-live.nodejs.cn/edit" target="_blank" class="action-btn">访问官网</a>
-                </div>
-            </div>
-            <div class="tool-card" data-tool="ECharts">
-                <div class="tag-row"><span class="tag tag-color-0">图表</span><span class="tag tag-color-2">数据可视化</span></div>
-                <div class="tool-name">ECharts</div>
-                <p class="tool-desc">基于 JavaScript 的开源可视化库，提供直观、交互式的图表展示，可嵌入html页面</p>
-                <div class="btn-group">
-                    <a href="https://echarts.apache.org/examples/zh/index.html#chart-type-line" target="_blank" class="action-btn">访问官网</a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- 开发试验与氛围编程 -->
-    <section class="section" id="execution" data-section="execution">
-        <div class="section-header">
-            <h2><span class="section-num">03</span>开发试验与氛围编程</h2>
-            <p>低代码、零代码的智能体搭建平台，以及Vibe Coding工具。</p>
-            <p class="tool-count">共 <span class="count">0</span> 个工具</p>
-            <p class="hidden-note">部分工具因筛选条件隐藏</p>
-        </div>
-        <div class="tool-grid" data-stage="execution">
-            <div class="tool-card" data-tool="Qoder">
-                <div class="tag-row"><span class="tag tag-color-0">AI编程</span></div>
-                <div class="tool-name">Qoder</div>
-                <p class="tool-desc">阿里巴巴推出，AI原生IDE，支持自然语言编程和全周期开发自动化。本工具集页面即是在Qoder中用Kimi2.5迭代的</p>
-                <div class="btn-group">
-                    <a href="https://qoder.alibaba-inc.com/" target="_blank" class="action-btn">访问官网</a>
-                </div>
-            </div>
-            <div class="tool-card" data-tool="Trae">
-                <div class="tag-row"><span class="tag tag-color-0">AI编程</span></div>
-                <div class="tool-name">Trae</div>
-                <p class="tool-desc">字节跳动推出，AI原生IDE，支持Chat、Builder和SOLO三种开发模式。</p>
-                <div class="btn-group">
-                    <a href="https://www.trae.com.cn/" target="_blank" class="action-btn">访问官网</a>
-                </div>
-            </div>
-            <div class="tool-card" data-tool="CodeBuddy">
-                <div class="tag-row"><span class="tag tag-color-0">AI编程</span></div>
-                <div class="tool-name">CodeBuddy</div>
-                <p class="tool-desc">腾讯云推出，AI编程助手，支持智能代码补全、错误检测和多文件开发。</p>
-                <div class="btn-group">
-                    <a href="https://copilot.tencent.com/" target="_blank" class="action-btn">访问官网</a>
-                </div>
-            </div>
-            <div class="tool-card" data-tool="扣子 Coze">
-                <div class="tag-row"><span class="tag tag-color-0">智能体平台</span><span class="tag tag-color-1">在线</span></div>
-                <div class="tool-name">扣子 Coze</div>
-                <p class="tool-desc">字节跳动推出的AI智能体开发平台，支持可视化工作流和插件扩展，可发布到多平台。</p>
-                <div class="btn-group">
-                    <a href="https://www.coze.cn/" target="_blank" class="action-btn">访问官网</a>
-                </div>
-            </div>
-            <div class="tool-card" data-tool="阿里云百炼">
-                <div class="tag-row"><span class="tag tag-color-0">智能体平台</span><span class="tag tag-color-1">在线</span></div>
-                <div class="tool-name">阿里云百炼</div>
-                <p class="tool-desc">阿里云推出的一站式大模型开发与应用平台，集成通义千问系列及多种主流模型。</p>
-                <div class="btn-group">
-                    <a href="https://bailian.console.aliyun.com/" target="_blank" class="action-btn">访问官网</a>
-                </div>
-            </div>
-            <div class="tool-card" data-tool="蚂蚁百宝箱">
-                <div class="tag-row"><span class="tag tag-color-0">智能体平台</span><span class="tag tag-color-1">在线</span></div>
-                <div class="tool-name">蚂蚁百宝箱</div>
-                <p class="tool-desc">蚂蚁集团推出的AI智能体开发平台，支持零代码构建智能体应用并发布到支付宝等渠道。</p>
-                <div class="btn-group">
-                    <a href="https://tbox.alipay.com/" target="_blank" class="action-btn">访问官网</a>
-                </div>
-            </div>
-            <div class="tool-card" data-tool="Dify">
-                <div class="tag-row"><span class="tag tag-color-0">智能体开发平台</span><span class="tag tag-color-1">本地部署</span></div>
-                <div class="tool-name">Dify</div>
-                <p class="tool-desc">开源LLM应用开发平台，支持可视化工作流构建、RAG和Agent能力，快速构建AI应用。</p>
-                <div class="btn-group">
-                    <a href="https://dify.ai/" target="_blank" class="action-btn">访问官网</a>
-                </div>
-            </div>
-            <div class="tool-card" data-tool="PromptPilot">
-                <div class="tag-row"><span class="tag tag-color-2">提示词优化</span></div>
-                <div class="tool-name">PromptPilot</div>
-                <p class="tool-desc">字节跳动推出的AI提示词生成与优化工具，支持Prompt生成、调优和批量处理。</p>
-                <div class="btn-group">
-                    <a href="https://promptpilot.volcengine.com/home" target="_blank" class="action-btn">访问官网</a>
-                </div>
-            </div>
-            <div class="tool-card" data-tool="Ollama">
-                <div class="tag-row"><span class="tag tag-color-1">本地部署</span></div>
-                <div class="tool-name">Ollama</div>
-                <p class="tool-desc">开源工具，支持在本地部署开源大模型，保护数据隐私。</p>
-                <div class="btn-group">
-                    <a href="https://ollama.com/" target="_blank" class="action-btn">访问官网</a>
-                </div>
-            </div>
-            <div class="tool-card" data-tool="LM Studio">
-                <div class="tag-row"><span class="tag tag-color-1">本地部署</span></div>
-                <div class="tool-name">LM Studio</div>
-                <p class="tool-desc">本地大模型运行工具，提供图形界面。</p>
-                <div class="btn-group">
-                    <a href="https://lmstudio.ai/" target="_blank" class="action-btn">访问官网</a>
-                </div>
-            </div>
-            <div class="tool-card" data-tool="豆包-应用生成">
-                <div class="tag-row"><span class="tag tag-color-0">AI应用平台</span><span class="tag tag-color-1">在线</span></div>
-                <div class="tool-name">豆包-应用生成</div>
-                <p class="tool-desc">豆包集成的零代码应用创建平台，基于Trae。可画原型，再基于原型生成界面。</p>
-                <div class="btn-group">
-                    <a href="https://www.doubao.com/code/chat" target="_blank" class="action-btn">访问官网</a>
-                </div>
-            </div>
-            <div class="tool-card" data-tool="灵光-闪应用">
-                <div class="tag-row"><span class="tag tag-color-0">AI应用平台</span><span class="tag tag-color-1">在线</span></div>
-                <div class="tool-name">灵光-闪应用</div>
-                <p class="tool-desc">灵光集成的零代码应用创建平台，可快速创建简单的应用工具。</p>
-                <div class="btn-group">
-                    <a href="https://www.lingguang.com/flashapp" target="_blank" class="action-btn">访问官网</a>
-                </div>
-            </div>
-            <div class="tool-card" data-tool="Meoo秒悟">
-                <div class="tag-row"><span class="tag tag-color-0">AI应用平台</span><span class="tag tag-color-1">在线</span></div>
-                <div class="tool-name">Meoo秒悟</div>
-                <p class="tool-desc">阿里推出的零代码应用创建平台，自动生成包含前端、后端代码的完整网站或H5页面，并支持在阿里云上一键部署上线。</p>
-                <div class="btn-group">
-                    <a href="https://www.meoo.com/" target="_blank" class="action-btn">访问官网</a>
-                </div>
-            </div>
-            <div class="tool-card" data-tool="秒哒">
-                <div class="tag-row"><span class="tag tag-color-0">AI应用平台</span><span class="tag tag-color-1">在线</span></div>
-                <div class="tool-name">秒哒</div>
-                <p class="tool-desc">百度推出的零代码应用创建平台，可做网页或微信小程序。</p>
-                <div class="btn-group">
-                    <a href="https://www.miaoda.cn/" target="_blank" class="action-btn">访问官网</a>
-                </div>
-            </div>
-            <div class="tool-card" data-tool="nocode">
-                <div class="tag-row"><span class="tag tag-color-0">AI应用平台</span><span class="tag tag-color-1">在线</span></div>
-                <div class="tool-name">nocode</div>
-                <p class="tool-desc">美团推出的同类平台。</p>
-                <div class="btn-group">
-                    <a href="https://nocode.cn" target="_blank" class="action-btn">访问官网</a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- 数据统计分析挖掘 -->
-    <section class="section" id="analysis" data-section="analysis">
-        <div class="section-header">
-            <h2><span class="section-num">04</span>数据统计分析挖掘</h2>
-            <p>收集数据，生成报告。AI 可辅助数据可视化和深度分析。</p>
-            <p class="tool-count">共 <span class="count">0</span> 个工具</p>
-            <p class="hidden-note">部分工具因筛选条件隐藏</p>
-        </div>
-        <div class="tool-grid" data-stage="analysis">
-            <div class="tool-card" data-tool="理论上所有AI【注意数据安全！！！必须脱敏！！！】">
-                <div class="tag-row"><span class="tag tag-color-2">提示词</span></div>
-                <div class="tool-name">理论上所有AI【注意数据安全！！！必须脱敏！！！】</div>
-                <p class="tool-desc">比写文章稍微复杂一些，把人的工作流转换成提示词模板或skill就行，使用下一个栏目的任意Agent皆可</p>
-                <div class="btn-group">
-                    <button class="action-btn modal-btn" data-prompt="你是python数据分析专家，我要写一篇《XXX分析报告》，现有N条数据，数据字段包括：A/B/C...（不要上传原始数据，可说明字段意义或提供模拟数据），请制定分析大纲，等我确认后开始编码进行数据清洗、统计、可视化，并生成报告">查看提示词</button>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Agent与自动化 -->
-    <section class="section" id="agent" data-section="agent">
-        <div class="section-header">
-            <h2><span class="section-num">05</span>Agent与自动化</h2>
-            <p>自动执行重复任务，提升效率...可辅助编写脚本和流程...不，不止是这些，本页的Agent可以做前述栏目的任何事情【本页全都是非技术人员也适用】</p>
-            <p class="tool-count">共 <span class="count">0</span> 个工具</p>
-            <p class="hidden-note">部分工具因筛选条件隐藏</p>
-        </div>
-        <div class="tool-grid" data-stage="agent">
-            <div class="tool-card" data-tool="WorkBuddy">
-                <div class="tag-row"><span class="tag tag-color-0">Claw</span><span class="tag tag-color-1">Agent</span><span class="tag tag-color-2">桌面版</span></div>
-                <div class="tool-name">WorkBuddy</div>
-                <p class="tool-desc">AI原生的桌面智能体工作台，可在手机主流 IM 下指令，AI 自动干活交付。腾讯版小龙虾（底层不是openclaw），简单易用，有免费额度。另外还有原始虾QClaw（基于openclaw）</p>
-                <div class="btn-group">
-                    <a href="https://www.codebuddy.cn/work/" target="_blank" class="action-btn">访问官网</a>
-                </div>
-            </div>
-            <div class="tool-card" data-tool="MiniMax Agent Desktop">
-                <div class="tag-row"><span class="tag tag-color-0">Claw</span><span class="tag tag-color-1">Agent</span><span class="tag tag-color-2">桌面版</span></div>
-                <div class="tool-name">MiniMax Agent Desktop</div>
-                <p class="tool-desc">MiniMax推出的通用型AI智能体，能够完成长程复杂任务，具备多步规划、灵活拆解任务需求和执行多个子任务的能力。另外也有云龙虾MaxClaw</p>
-                <div class="btn-group">
-                    <a href="https://agent.minimaxi.com/download" target="_blank" class="action-btn">访问官网</a>
-                </div>
-            </div>
-            <div class="tool-card" data-tool="阶跃AI桌面伙伴">
-                <div class="tag-row"><span class="tag tag-color-0">Claw</span><span class="tag tag-color-1">Agent</span><span class="tag tag-color-2">桌面版</span></div>
-                <div class="tool-name">阶跃AI桌面伙伴</div>
-                <p class="tool-desc">阶跃AI推出的智能助手，工具能连接本地操作系统，查看和管理本地文件，支持访问互联网，完成复杂任务规划与执行。也内置了自家龙虾StepClaw</p>
-                <div class="btn-group">
-                    <a href="https://www.stepfun.com/download" target="_blank" class="action-btn">访问官网</a>
-                </div>
-            </div>
-            <div class="tool-card" data-tool="QoderWork">
-                <div class="tag-row"><span class="tag tag-color-0">Agent</span><span class="tag tag-color-1">桌面版</span></div>
-                <div class="tool-name">QoderWork</div>
-                <p class="tool-desc">阿里巴巴Qoder团队推出的桌面端AI智能体，主打「人人都能用的本地AI助理」。把大模型、Agent框架、MCP工具集和可自定义Skills封装进一款macOS应用</p>
-                <div class="btn-group">
-                    <a href="https://qoder.com/qoderwork" target="_blank" class="action-btn">访问官网</a>
-                </div>
-            </div>
-            <div class="tool-card" data-tool="Kimi Agent">
-                <div class="tag-row"><span class="tag tag-color-0">Claw</span><span class="tag tag-color-1">Agent</span><span class="tag tag-color-2">在线</span></div>
-                <div class="tool-name">Kimi Agent</div>
-                <p class="tool-desc">Agent模式很全能，启动一台云电脑执行各种操作，缺点是不能直接操作本地文件，要上传/下载。另外也有云龙虾KimiClaw</p>
-                <div class="btn-group">
-                    <a href="https://www.kimi.com/" target="_blank" class="action-btn">访问官网</a>
-                </div>
-            </div>
-            <div class="tool-card" data-tool="智谱AI的虾">
-                <div class="tag-row"><span class="tag tag-color-0">Claw</span><span class="tag tag-color-1">Agent</span><span class="tag tag-color-2">桌面版</span></div>
-                <div class="tool-name">智谱AI的虾</div>
-                <p class="tool-desc">有云端（GLM-Claw），有本地（AutoClaw），功能有所区别，易用性都不错</p>
-                <div class="btn-group">
-                    <a href="https://chatglm.cn/main/createClaw?lang=zh" target="_blank" class="action-btn">GLM-Claw</a>
-                    <a href="https://autoglm.zhipuai.cn/autoclaw/" target="_blank" class="action-btn">AutoClaw</a>
-                </div>
-            </div>
-            <div class="tool-card" data-tool="百度龙虾全家桶">
-                <div class="tag-row"><span class="tag tag-color-0">Claw</span><span class="tag tag-color-1">Agent</span><span class="tag tag-color-2">桌面版</span></div>
-                <div class="tool-name">百度龙虾全家桶</div>
-                <p class="tool-desc">太多了用不过来</p>
-                <div class="btn-group">
-                    <a href="https://hsz.baidu.com/operator/?c=bdpz" target="_blank" class="action-btn">RedClaw</a>
-                    <a href="https://cloud.baidu.com/product/du.html" target="_blank" class="action-btn">DuClaw</a>
-                    <a href="https://cloud.baidu.com/product/dumate.html" target="_blank" class="action-btn">DuMate</a>
-                </div>
-            </div>
-            <div class="tool-card" data-tool="Quicker">
-                <div class="tag-row"><span class="tag tag-color-2">快捷动作</span></div>
-                <div class="tool-name">Quicker</div>
-                <p class="tool-desc">Windows平台的自动化效率工具，通过可视化编程创建快捷动作，支持8000+共享动作库。</p>
-                <div class="btn-group">
-                    <a href="https://getquicker.net/" target="_blank" class="action-btn">访问官网</a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- 其他办公事务 -->
-    <section class="section" id="work" data-section="work">
-        <div class="section-header">
-            <h2><span class="section-num">06</span>其他办公事务</h2>
-            <p>处理日常办公事务，提高效率。</p>
-            <p class="tool-count">共 <span class="count">0</span> 个工具</p>
-            <p class="hidden-note">部分工具因筛选条件隐藏</p>
-        </div>
-        <div class="tool-grid" data-stage="work">
-            <div class="tool-card" data-tool="WPS">
-                <div class="tag-row"><span class="tag tag-color-0">办公</span></div>
-                <div class="tool-name">WPS</div>
-                <p class="tool-desc">开个会员，很多功能都挺方便的，文档校对、识图改字等。</p>
-                <div class="btn-group">
-                    <a href="https://www.wps.com/" target="_blank" class="action-btn">访问官网</a>
-                </div>
-            </div>
-            <div class="tool-card" data-tool="Markdown编辑器">
-                <div class="tag-row"><span class="tag tag-color-0">文字</span></div>
-                <div class="tool-name">Markdown编辑器</div>
-                <p class="tool-desc">Markdown 是一种轻量级标记语言‌，让文字编辑回归内容本身，而无需关心排版和格式设置。在AI时代也是LLM最喜欢的输入形式。下为两款在线编辑器。</p>
-                <div class="btn-group">
-                    <a href="https://stackedit.cn" target="_blank" class="action-btn">stackedit</a>
-                    <a href="https://dillinger.io/" target="_blank" class="action-btn">dillinger</a>
-                </div>
-            </div>
-            <div class="tool-card" data-tool="提示词优化助手">
-                <div class="tag-row"><span class="tag tag-color-2">提示词</span></div>
-                <div class="tool-name">提示词优化助手</div>
-                <p class="tool-desc">我用豆包建的在线提示词优化助手，输入【优化提示词：（你的想法）】即可。</p>
-                <div class="btn-group">
-                    <a href="https://doubao.com/bot/gZZm3FsP" target="_blank" class="action-btn">访问官网</a>
-                </div>
-            </div>
-            <div class="tool-card" data-tool="提示词优化助手PRO">
-                <div class="tag-row"><span class="tag tag-color-2">提示词</span></div>
-                <div class="tool-name">提示词优化助手PRO</div>
-                <p class="tool-desc">前一个是精炼版优化，这个是进阶框架版优化，多数任务用前一个足够</p>
-                <div class="btn-group">
-                    <a href="https://doubao.com/bot/gZZm3FsP" target="_blank" class="action-btn">访问官网</a>
-                </div>
-            </div>
-            <div class="tool-card" data-tool="AI speaker">
-                <div class="tag-row"><span class="tag tag-color-1">语音</span></div>
-                <div class="tool-name">AI speaker</div>
-                <p class="tool-desc">在线免费文字转语音，剪辑系统演示视频需配音时可用。</p>
-                <div class="btn-group">
-                    <a href="https://ai-speaker.net/zh" target="_blank" class="action-btn">访问官网</a>
-                </div>
-            </div>
-            <div class="tool-card" data-tool="即梦">
-                <div class="tag-row"><span class="tag tag-color-1">视频</span></div>
-                <div class="tool-name">即梦</div>
-                <p class="tool-desc">字节跳动推出，最强视频生成AI，Seedance2.0模型，超越OpenAI的Sora2和谷歌的Veo3。</p>
-                <div class="btn-group">
-                    <a href="https://jimeng.jianying.com" target="_blank" class="action-btn">访问官网</a>
-                </div>
-            </div>
-            <div class="tool-card" data-tool="万相">
-                <div class="tag-row"><span class="tag tag-color-1">视频</span><span class="tag tag-color-0">图片</span></div>
-                <div class="tool-name">万相</div>
-                <p class="tool-desc">阿里的，也还不错</p>
-                <div class="btn-group">
-                    <a href="https://tongyi.aliyun.com/wan" target="_blank" class="action-btn">访问官网</a>
-                </div>
-            </div>
-            <div class="tool-card" data-tool="可灵">
-                <div class="tag-row"><span class="tag tag-color-1">视频</span></div>
-                <div class="tool-name">可灵</div>
-                <p class="tool-desc">快手推出，国内领先的视频生成AI之一。</p>
-                <div class="btn-group">
-                    <a href="https://app.klingai.com/cn/" target="_blank" class="action-btn">访问官网</a>
-                </div>
-            </div>
-            
-            <div class="tool-card" data-tool="有道宝库">
-                <div class="tag-row"><span class="tag tag-color-0">知识库</span><span class="tag tag-color-1">PPT</span></div>
-                <div class="tool-name">有道宝库</div>
-                <p class="tool-desc">网易有道推出的AI知识库，定位为AI研究助手与思考伙伴，号称中国版NotebookLM（谷歌推出，同类产品的TOP1），聚焦知识的深度理解与结构化重构，为用户提供一站式知识管理、AI智能问答及多模态内容生成服务</p>
-                <div class="btn-group">
-                    <a href="https://baoku.youdao.com/" target="_blank" class="action-btn">访问官网</a>
-                </div>
-            </div>
-            
-        </div>
-    </section>
+    <!-- 栏目区域由 JS 动态渲染 -->
 
 </div>
 
 <script>
+    // ==================== 数据 ====================
+    const SECTIONS = [
+        {
+            id: 'llm',
+            num: '00',
+            title: '国产基座大模型',
+            desc: '为各类上层产品提供基础智能的LLM们，几乎每一家都已经自带了能力更全面的通用型Agent产品。',
+            tools: [
+                {
+                    name: 'GLM',
+                    tags: ['LLM', 'Agent'],
+                    desc: '智谱AI推出，清华系，中文环境优先选用，基本上一更新就是开源第一。两个链接分别为产品端（功能丰富）和模型端（纯净界面）。',
+                    links: [
+                        { label: '智谱清言', url: 'https://chatglm.cn/' },
+                        { label: 'Z.ai', url: 'https://chat.z.ai/' }
+                    ]
+                },
+                {
+                    name: 'MiniMax',
+                    tags: ['LLM', 'Agent'],
+                    desc: '稀宇科技推出，综合能力强大，推荐下载桌面版（全能工作台）。',
+                    links: [{ label: '访问官网', url: 'https://agent.minimaxi.com/' }]
+                },
+                {
+                    name: 'Kimi',
+                    tags: ['LLM', 'Agent'],
+                    desc: '月之暗面推出，适合多模态场景，前端能力较好，但目前算力不足，经常繁忙。有桌面版（AI浏览器类）。',
+                    links: [{ label: '访问官网', url: 'https://www.kimi.com/' }]
+                },
+                {
+                    name: 'Qwen',
+                    tags: ['LLM', 'Agent'],
+                    desc: '阿里通义千问系列，长期开源榜一，和前3个基本是国产王者轮座。两个链接分别为产品端和模型端。',
+                    links: [
+                        { label: '千问', url: 'https://www.qianwen.com/' },
+                        { label: 'Qwen chat', url: 'https://chat.qwen.ai/' }
+                    ]
+                },
+                {
+                    name: 'DeepSeek',
+                    tags: ['LLM', 'Agent'],
+                    desc: '深度求索推出，永远有一席之地，最新版的长文本注意力机制很强，在多轮对话中能记住更多历史细节。【新出了专家模式】',
+                    links: [{ label: '访问官网', url: 'https://chat.deepseek.com/' }]
+                },
+                {
+                    name: '豆包-Seed',
+                    tags: ['LLM', 'Agent'],
+                    desc: '字节跳动推出，工作生活娱乐皆可，支持自建Agent（固化系统提示词），有桌面版（AI浏览器类，官方支持部署模型到本地，但需有适配的硬件）。【其专家模式是写长文最佳实践之一】',
+                    links: [{ label: '访问官网', url: 'https://www.doubao.com/chat/' }]
+                },
+                {
+                    name: 'Step',
+                    tags: ['LLM', 'Agent'],
+                    desc: '阶跃星辰推出，桌面版（全能工作台）也极具竞争力。',
+                    links: [{ label: '访问官网', url: 'https://www.stepfun.com/chats/new' }]
+                },
+                {
+                    name: '文心ERNIE',
+                    tags: ['LLM', 'Agent'],
+                    desc: '百度推出，可以试试。',
+                    links: [{ label: '访问官网', url: 'https://yiyan.baidu.com/' }]
+                },
+                {
+                    name: '混元',
+                    tags: ['LLM', 'Agent'],
+                    desc: '腾讯推出，可以试试。',
+                    links: [{ label: '访问官网', url: 'https://hunyuan.tencent.com' }]
+                },
+                {
+                    name: '天工Skywork',
+                    tags: ['LLM', 'Agent'],
+                    desc: '昆仑万维推出，可以试试。',
+                    links: [{ label: '访问官网', url: 'https://www.tiangong.cn/' }]
+                },
+                {
+                    name: 'Longcat',
+                    tags: ['LLM', 'Agent'],
+                    desc: '美团推出，可以试试。',
+                    links: [{ label: '访问官网', url: 'https://longcat.chat/' }]
+                },
+                {
+                    name: 'MIMO',
+                    tags: ['LLM', 'Agent'],
+                    desc: '小米推出，可以试试。还有小米版云龙虾MiClaw',
+                    links: [{ label: '访问官网', url: 'https://aistudio.xiaomimimo.com/#/' }]
+                }
+            ]
+        },
+        {
+            id: 'info',
+            num: '01',
+            title: '信息收集与需求分析',
+            desc: '此阶段重点在于快速理解行业背景、捕捉客户痛点并输出高质量方案大纲。利用 AI 提升调研深度和响应速度。',
+            tools: [
+                {
+                    name: '灵光',
+                    tags: ['搜索', 'APP'],
+                    desc: '蚂蚁集团推出的，适当篇幅、总分总的输出排版形式十分适合知识问答学习，适合灵光一闪时的提问，建议下载手机APP。',
+                    links: [{ label: '访问官网', url: 'https://www.lingguang.com/chat' }]
+                },
+                {
+                    name: '秘塔AI搜索',
+                    tags: ['搜索'],
+                    desc: '秘塔科技推出，无广告搜索引擎，提供直接精准的答案，支持自动生成大纲和思维导图。',
+                    links: [{ label: '访问官网', url: 'https://metaso.cn/' }]
+                },
+                {
+                    name: 'AMiner',
+                    tags: ['搜索'],
+                    desc: '智谱推出的AI学术搜索。',
+                    links: [{ label: '访问官网', url: 'https://www.aminer.cn/' }]
+                },
+                {
+                    name: '豆包',
+                    tags: ['LLM', 'Agent'],
+                    desc: '开思考或专家模式，信息检索的幻觉率基本是国内最低的。',
+                    links: [{ label: '访问官网', url: 'https://www.doubao.com/chat/' }]
+                },
+                {
+                    name: '万能调研提示词',
+                    tags: ['提示词'],
+                    desc: '公众号大佬-卡兹克推荐',
+                    links: [{ label: '访问官网', url: 'https://mp.weixin.qq.com/s/Y_uRMYBmdLWUPnz_ac7jWA' }]
+                }
+            ]
+        },
+        {
+            id: 'design',
+            num: '02',
+            title: '产品定义与视觉设计',
+            desc: '将需求具象化为 PRD 和原型。AI 可辅助生成描述、补全边界条件以及快速产出 UI 视觉稿。',
+            tools: [
+                {
+                    name: 'AI BUDDY',
+                    tags: ['产品经理'],
+                    desc: '某产品经理自制的AI搭子，产品设计全流程的思路辅助，很有参考价值',
+                    links: [{ label: '访问官网', url: 'https://aipair.kkjm.space/' }]
+                },
+                {
+                    name: 'MasterGo',
+                    tags: ['原型UI'],
+                    desc: '莫高AI推出，用语言描述来画原型的最佳选择之一。',
+                    links: [{ label: '访问官网', url: 'https://mastergo.com/' }]
+                },
+                {
+                    name: '星流',
+                    tags: ['原型UI'],
+                    desc: 'LiblibAI推出，辅助设计',
+                    links: [{ label: '访问官网', url: 'https://www.xingliu.art/' }]
+                },
+                {
+                    name: 'Kimi PPT助手',
+                    tags: ['PPT'],
+                    desc: '组件式AI PPT的好选择之一（以前和AI PPT合作，现在好像没了，模板变少了）',
+                    links: [{ label: '访问官网', url: 'https://www.kimi.com/slides' }]
+                },
+                {
+                    name: 'MiniMax Agent',
+                    tags: ['PPT', '全能型'],
+                    desc: '生图式AI PPT的最佳选择（但最近官方更新了skill换成组件式和生图式结合，感觉美学变差了），此外其他功能也很强大',
+                    links: [{ label: '访问官网', url: 'https://agent.minimaxi.com/' }]
+                },
+                {
+                    name: 'ProcessOn',
+                    tags: ['流程图', '思维导图', '架构图'],
+                    desc: '在线制图比较方便，也支持AI辅助',
+                    links: [{ label: '访问官网', url: 'https://www.processon.com' }]
+                },
+                {
+                    name: 'iSlide',
+                    tags: ['PPT', '插件'],
+                    desc: 'PPT插件工具和模板平台iSlide推出的AI PPT生成和设计工具，旨在辅助用户更快、更高效地制作和优化PPT演示文稿',
+                    links: [{ label: '访问官网', url: 'https://www.islide.cc/?mtm_campaign=ai-bot' }]
+                },
+                {
+                    name: 'Napkin',
+                    tags: ['PPT'],
+                    desc: '将文字转化为视觉内容，让分享想法变得快速高效',
+                    links: [{ label: '访问官网', url: 'https://www.napkin.ai/' }]
+                },
+                {
+                    name: 'next-ai-drawio',
+                    tags: ['AI', '架构图'],
+                    desc: '用自然语言描述生成可编辑的架构图',
+                    links: [{ label: '访问官网', url: 'https://next-ai-drawio.jiang.jp/zh' }]
+                },
+                {
+                    name: 'Mermaid',
+                    tags: ['流程图', '思维导图', '架构图'],
+                    desc: '基于 JavaScript 的开源图表绘制工具‌，它允许用户通过类似 Markdown 的文本语法来创建和渲染各类图表，无需使用传统拖拽式绘图软件',
+                    links: [{ label: '访问官网', url: 'https://mermaid-live.nodejs.cn/edit' }]
+                },
+                {
+                    name: 'ECharts',
+                    tags: ['图表', '数据可视化'],
+                    desc: '基于 JavaScript 的开源可视化库，提供直观、交互式的图表展示，可嵌入html页面',
+                    links: [{ label: '访问官网', url: 'https://echarts.apache.org/examples/zh/index.html#chart-type-line' }]
+                }
+            ]
+        },
+        {
+            id: 'execution',
+            num: '03',
+            title: '开发试验与氛围编程',
+            desc: '低代码、零代码的智能体搭建平台，以及Vibe Coding工具。',
+            tools: [
+                {
+                    name: 'Qoder',
+                    tags: ['AI编程', '桌面版'],
+                    desc: '阿里巴巴推出，AI原生IDE，支持自然语言编程和全周期开发自动化。本工具集页面即是在Qoder中用Kimi2.5迭代的',
+                    links: [{ label: '访问官网', url: 'https://qoder.alibaba-inc.com/' }]
+                },
+                {
+                    name: 'Trae',
+                    tags: ['AI编程', '桌面版'],
+                    desc: '字节跳动推出，AI原生IDE，支持Chat、Builder和SOLO三种开发模式。',
+                    links: [{ label: '访问官网', url: 'https://www.trae.com.cn/' }]
+                },
+                {
+                    name: 'CodeBuddy',
+                    tags: ['AI编程', '桌面版'],
+                    desc: '腾讯云推出，AI编程助手，支持智能代码补全、错误检测和多文件开发。',
+                    links: [{ label: '访问官网', url: 'https://copilot.tencent.com/' }]
+                },
+                {
+                    name: '扣子 Coze',
+                    tags: ['智能体平台', '在线'],
+                    desc: '字节跳动推出的AI智能体开发平台，支持可视化工作流和插件扩展，可发布到多平台。',
+                    links: [{ label: '访问官网', url: 'https://www.coze.cn/' }]
+                },
+                {
+                    name: '阿里云百炼',
+                    tags: ['智能体平台', '在线'],
+                    desc: '阿里云推出的一站式大模型开发与应用平台，集成通义千问系列及多种主流模型。',
+                    links: [{ label: '访问官网', url: 'https://bailian.console.aliyun.com/' }]
+                },
+                {
+                    name: '蚂蚁百宝箱',
+                    tags: ['智能体平台', '在线'],
+                    desc: '蚂蚁集团推出的AI智能体开发平台，支持零代码构建智能体应用并发布到支付宝等渠道。',
+                    links: [{ label: '访问官网', url: 'https://tbox.alipay.com/' }]
+                },
+                {
+                    name: 'Dify',
+                    tags: ['智能体开发平台', '本地部署'],
+                    desc: '开源LLM应用开发平台，支持可视化工作流构建、RAG和Agent能力，快速构建AI应用。',
+                    links: [{ label: '访问官网', url: 'https://dify.ai/' }]
+                },
+                {
+                    name: 'PromptPilot',
+                    tags: ['提示词'],
+                    desc: '字节跳动推出的AI提示词生成与优化工具，支持Prompt生成、调优和批量处理。',
+                    links: [{ label: '访问官网', url: 'https://promptpilot.volcengine.com/home' }]
+                },
+                {
+                    name: 'Ollama',
+                    tags: ['本地部署'],
+                    desc: '开源工具，支持在本地部署开源大模型，保护数据隐私。',
+                    links: [{ label: '访问官网', url: 'https://ollama.com/' }]
+                },
+                {
+                    name: 'LM Studio',
+                    tags: ['本地部署'],
+                    desc: '本地大模型运行工具，提供图形界面。',
+                    links: [{ label: '访问官网', url: 'https://lmstudio.ai/' }]
+                },
+                {
+                    name: '豆包-应用生成',
+                    tags: ['AI应用平台', '在线'],
+                    desc: '豆包集成的零代码应用创建平台，基于Trae。可画原型，再基于原型生成界面。',
+                    links: [{ label: '访问官网', url: 'https://www.doubao.com/code/chat' }]
+                },
+                {
+                    name: '灵光-闪应用',
+                    tags: ['AI应用平台', '在线'],
+                    desc: '灵光集成的零代码应用创建平台，可快速创建简单的应用工具。',
+                    links: [{ label: '访问官网', url: 'https://www.lingguang.com/flashapp' }]
+                },
+                {
+                    name: 'Meoo秒悟',
+                    tags: ['AI应用平台', '在线'],
+                    desc: '阿里推出的零代码应用创建平台，自动生成包含前端、后端代码的完整网站或H5页面，并支持在阿里云上一键部署上线。',
+                    links: [{ label: '访问官网', url: 'https://www.meoo.com/' }]
+                },
+                {
+                    name: '秒哒',
+                    tags: ['AI应用平台', '在线'],
+                    desc: '百度推出的零代码应用创建平台，可做网页或微信小程序。',
+                    links: [{ label: '访问官网', url: 'https://www.miaoda.cn/' }]
+                },
+                {
+                    name: 'nocode',
+                    tags: ['AI应用平台', '在线'],
+                    desc: '美团推出的同类平台。',
+                    links: [{ label: '访问官网', url: 'https://nocode.cn' }]
+                }
+            ]
+        },
+        {
+            id: 'analysis',
+            num: '04',
+            title: '数据统计分析挖掘',
+            desc: '收集数据，生成报告。AI 可辅助数据可视化和深度分析。',
+            tools: [
+                {
+                    name: '理论上所有AI【注意数据安全！！！必须脱敏！！！】',
+                    tags: ['提示词'],
+                    desc: '比写文章稍微复杂一些，把人的工作流转换成提示词模板或skill就行，使用下一个栏目的任意Agent皆可',
+                    prompt: '你是python数据分析专家，我要写一篇《XXX分析报告》，现有N条数据，数据字段包括：A/B/C...（不要上传原始数据，可说明字段意义或提供模拟数据），请制定分析大纲，等我确认后开始编码进行数据清洗、统计、可视化，并生成报告'
+                }
+            ]
+        },
+        {
+            id: 'agent',
+            num: '05',
+            title: 'Agent与自动化',
+            desc: '自动执行重复任务，提升效率...可辅助编写脚本和流程...不，不止是这些，本页的Agent可以做前述栏目的任何事情【本页全都是非技术人员也适用】',
+            tools: [
+                {
+                    name: 'WorkBuddy',
+                    tags: ['Claw', 'Agent', '桌面版'],
+                    desc: 'AI原生的桌面智能体工作台，可在手机主流 IM 下指令，AI 自动干活交付。腾讯版小龙虾（底层不是openclaw），简单易用，有免费额度。另外还有原始虾QClaw（基于openclaw）',
+                    links: [{ label: '访问官网', url: 'https://www.codebuddy.cn/work/' }]
+                },
+                {
+                    name: 'MiniMax Agent Desktop',
+                    tags: ['Claw', 'Agent', '桌面版'],
+                    desc: 'MiniMax推出的通用型AI智能体，能够完成长程复杂任务，具备多步规划、灵活拆解任务需求和执行多个子任务的能力。另外也有云龙虾MaxClaw',
+                    links: [{ label: '访问官网', url: 'https://agent.minimaxi.com/download' }]
+                },
+                {
+                    name: '阶跃AI桌面伙伴',
+                    tags: ['Claw', 'Agent', '桌面版'],
+                    desc: '阶跃AI推出的智能助手，工具能连接本地操作系统，查看和管理本地文件，支持访问互联网，完成复杂任务规划与执行。也内置了自家龙虾StepClaw',
+                    links: [{ label: '访问官网', url: 'https://www.stepfun.com/download' }]
+                },
+                {
+                    name: 'QoderWork',
+                    tags: ['Agent', '桌面版'],
+                    desc: '阿里巴巴Qoder团队推出的桌面端AI智能体，主打「人人都能用的本地AI助理」。把大模型、Agent框架、MCP工具集和可自定义Skills封装进一款macOS应用',
+                    links: [{ label: '访问官网', url: 'https://qoder.com/qoderwork' }]
+                },
+                {
+                    name: 'Kimi Agent',
+                    tags: ['Claw', 'Agent', '在线'],
+                    desc: 'Agent模式很全能，启动一台云电脑执行各种操作，缺点是不能直接操作本地文件，要上传/下载。另外也有云龙虾KimiClaw',
+                    links: [{ label: '访问官网', url: 'https://www.kimi.com/' }]
+                },
+                {
+                    name: '智谱AI的虾',
+                    tags: ['Claw', 'Agent', '桌面版'],
+                    desc: '有云端（GLM-Claw），有本地（AutoClaw），功能有所区别，易用性都不错',
+                    links: [
+                        { label: 'GLM-Claw', url: 'https://chatglm.cn/main/createClaw?lang=zh' },
+                        { label: 'AutoClaw', url: 'https://autoglm.zhipuai.cn/autoclaw/' }
+                    ]
+                },
+                {
+                    name: '百度龙虾全家桶',
+                    tags: ['Claw', 'Agent', '桌面版'],
+                    desc: '太多了用不过来',
+                    links: [
+                        { label: 'RedClaw', url: 'https://hsz.baidu.com/operator/?c=bdpz' },
+                        { label: 'DuClaw', url: 'https://cloud.baidu.com/product/du.html' },
+                        { label: 'DuMate', url: 'https://cloud.baidu.com/product/dumate.html' }
+                    ]
+                },
+                {
+                    name: 'Quicker',
+                    tags: ['快捷动作'],
+                    desc: 'Windows平台的自动化效率工具，通过可视化编程创建快捷动作，支持8000+共享动作库。',
+                    links: [{ label: '访问官网', url: 'https://getquicker.net/' }]
+                },
+                {
+                    name: 'ChatMemo',
+                    tags: ['AI对话管理'],
+                    desc: 'ChatMemo 将你在各个 AI 平台的零散对话，实时保存为你的统一、私密、可随时检索的个人记忆资产。',
+                    links: [{ label: '访问官网', url: 'https://chatmemo.ai/' }]
+                },
+            ]
+        },
+        {
+            id: 'work',
+            num: '06',
+            title: '其他办公事务',
+            desc: '处理日常办公事务，提高效率。',
+            tools: [
+                {
+                    name: 'WPS',
+                    tags: ['办公'],
+                    desc: '开个会员，很多功能都挺方便的，文档校对、识图改字等。',
+                    links: [{ label: '访问官网', url: 'https://www.wps.com/' }]
+                },
+                {
+                    name: 'Markdown编辑器',
+                    tags: ['文字'],
+                    desc: 'Markdown 是一种轻量级标记语言‌，让文字编辑回归内容本身，而无需关心排版和格式设置。在AI时代也是LLM最喜欢的输入形式。下为两款在线编辑器。',
+                    links: [
+                        { label: 'stackedit', url: 'https://stackedit.cn' },
+                        { label: 'dillinger', url: 'https://dillinger.io/' }
+                    ]
+                },
+                {
+                    name: '提示词优化助手',
+                    tags: ['提示词'],
+                    desc: '我用豆包建的在线提示词优化助手，输入【优化提示词：（你的想法）】即可。',
+                    links: [{ label: '访问官网', url: 'https://doubao.com/bot/gZZm3FsP' }]
+                },
+                {
+                    name: '提示词优化助手PRO',
+                    tags: ['提示词'],
+                    desc: '前一个是精炼版优化，这个是进阶框架版优化，多数任务用前一个足够',
+                    links: [{ label: '访问官网', url: 'https://doubao.com/bot/5p5uU3BW' }]
+                },
+                {
+                    name: 'AI speaker',
+                    tags: ['语音'],
+                    desc: '在线免费文字转语音，剪辑系统演示视频需配音时可用。',
+                    links: [{ label: '访问官网', url: 'https://ai-speaker.net/zh' }]
+                },
+                {
+                    name: '即梦',
+                    tags: ['视频'],
+                    desc: '字节跳动推出，最强视频生成AI，Seedance2.0模型，超越OpenAI的Sora2和谷歌的Veo3。',
+                    links: [{ label: '访问官网', url: 'https://jimeng.jianying.com' }]
+                },
+                {
+                    name: '万相',
+                    tags: ['视频', '图片'],
+                    desc: '阿里的，也还不错',
+                    links: [{ label: '访问官网', url: 'https://tongyi.aliyun.com/wan' }]
+                },
+                {
+                    name: '可灵',
+                    tags: ['视频'],
+                    desc: '快手推出，国内领先的视频生成AI之一。',
+                    links: [{ label: '访问官网', url: 'https://app.klingai.com/cn/' }]
+                },
+                {
+                    name: '有道宝库',
+                    tags: ['知识库', 'PPT'],
+                    desc: '网易有道推出的AI知识库，定位为AI研究助手与思考伙伴，号称中国版NotebookLM（谷歌推出，同类产品的TOP1），聚焦知识的深度理解与结构化重构，为用户提供一站式知识管理、AI智能问答及多模态内容生成服务',
+                    links: [{ label: '访问官网', url: 'https://baoku.youdao.com/' }]
+                }
+            ]
+        },
+        {
+            id: 'news',
+            num: '07',
+            title: 'AI资讯',
+            desc: 'AI相关的新闻、文章、博客等。',
+            tools: [
+                {
+                    name: 'Bilibili-产品君',
+                    tags: ['资讯'],
+                    desc: '盘点一周AI大事系列，3分钟速览前沿动态',
+                    links: [{ label: '访问空间', url: 'https://space.bilibili.com/1845434732' }]
+                },
+                {
+                    name: '微信公众号-APPSO',
+                    tags: ['资讯'],
+                    desc: 'slogan：Al第一新媒体，「超级个体」的灵感指南。',
+                    links: [{ label: '访问文章', url: 'https://mp.weixin.qq.com/s/2Uvwb2KLy8wf5ryd82vpbw' }]
+                },
+                {
+                    name: 'Bilibili-开源项目盘点',
+                    tags: ['资讯', '开源项目'],
+                    desc: '每天分享一款高质量开源项目(实用项目、AI工具、效率神器、知识科普、学习干货、编程技术)',
+                    links: [{ label: '访问空间', url: 'https://space.bilibili.com/3546911659264635' }]
+                },
+                {
+                    name: 'AI工具集',
+                    tags: ['资讯', '工具集'],
+                    desc: '1000+ AI工具集合，国内外AI工具集导航大全',
+                    links: [{ label: '访问官网', url: 'https://ai-bot.cn/' }]
+                }
+            ]
+        }
+    ];
+
     // ==================== 状态 ====================
     let searchQuery = '';
     let activeFilters = [];
-    let filterMode = 'AND'; // 'AND' 或 'OR'
+    let filterMode = 'ONLY'; // 'ONLY'、'AND' 或 'OR'
     let isFilteredView = false; // 是否显示筛选结果视图
+    let isTagsExpanded = false; // 标签展开状态
+
+    // ==================== 渲染函数 ====================
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    function renderToolCard(tool) {
+        const tagsHtml = tool.tags.map((tag, i) => 
+            `<span class="tag tag-color-${i % 3}">${escapeHtml(tag)}</span>`
+        ).join('');
+        
+        let actionsHtml;
+        if (tool.prompt) {
+            actionsHtml = `<button class="action-btn modal-btn" data-prompt="${escapeHtml(tool.prompt)}">查看提示词</button>`;
+        } else {
+            actionsHtml = tool.links.map(link => 
+                `<a href="${link.url}" target="_blank" class="action-btn">${escapeHtml(link.label)}</a>`
+            ).join('');
+        }
+        
+        return `
+            <div class="tool-card" data-tool="${escapeHtml(tool.name)}" role="article">
+                <div class="tag-row">${tagsHtml}</div>
+                <div class="tool-name">${escapeHtml(tool.name)}</div>
+                <p class="tool-desc">${escapeHtml(tool.desc)}</p>
+                <div class="btn-group">${actionsHtml}</div>
+            </div>
+        `;
+    }
+
+    function renderSections() {
+        const mainContent = document.querySelector('.main-content');
+        SECTIONS.forEach(section => {
+            const toolsHtml = section.tools.map(renderToolCard).join('');
+            const sectionHtml = `
+                <section class="section" id="${section.id}" data-section="${section.id}">
+                    <div class="section-header">
+                        <h2><span class="section-num">${section.num}</span>${escapeHtml(section.title)}</h2>
+                        <p>${escapeHtml(section.desc)}</p>
+                        <p class="tool-count">共 <span class="count">0</span> 个工具</p>
+                        <p class="hidden-note">部分工具因筛选条件隐藏</p>
+                    </div>
+                    <div class="tool-grid" data-stage="${section.id}">${toolsHtml}</div>
+                </section>
+            `;
+            mainContent.insertAdjacentHTML('beforeend', sectionHtml);
+        });
+    }
+
+    function renderNavbar() {
+        const navList = document.getElementById('navList');
+        navList.innerHTML = SECTIONS.map(section => 
+            `<li><a href="#${section.id}" class="nav-item" data-section="${section.id}"><span class="step-num">${section.num}</span><span>${escapeHtml(section.title)}</span></a></li>`
+        ).join('');
+    }
 
     // ==================== 工具函数 ====================
     // 获取所有标签及其出现次数
     function collectAllTags() {
         const tagCount = {};
-        document.querySelectorAll('.tool-card').forEach(card => {
-            card.querySelectorAll('.tag').forEach(tagEl => {
-                const tag = tagEl.textContent.trim();
-                tagCount[tag] = (tagCount[tag] || 0) + 1;
-            });
-        });
+        SECTIONS.forEach(s => s.tools.forEach(t => 
+            t.tags.forEach(tag => { tagCount[tag] = (tagCount[tag] || 0) + 1; })
+        ));
         return Object.entries(tagCount)
             .sort((a, b) => b[1] - a[1])
             .map(([tag, count]) => ({ tag, count }));
@@ -1221,14 +1234,14 @@
         
         // 标签筛选
         if (activeFilters.length > 0) {
-            if (filterMode === 'AND') {
-                // AND: 必须包含所有选中标签
-                const hasAllTags = activeFilters.every(f => tags.includes(f.toLowerCase()));
-                if (!hasAllTags) return false;
-            } else {
+            if (filterMode === 'OR') {
                 // OR: 包含任一选中标签
                 const hasAnyTag = activeFilters.some(f => tags.includes(f.toLowerCase()));
                 if (!hasAnyTag) return false;
+            } else {
+                // ONLY/AND: 必须包含所有选中标签（ONLY模式下只有一个标签）
+                const hasAllTags = activeFilters.every(f => tags.includes(f.toLowerCase()));
+                if (!hasAllTags) return false;
             }
         }
         
@@ -1259,7 +1272,8 @@
         
         container.innerHTML = displayTags.map(({ tag, count }) => `
             <button class="filter-tag ${activeFilters.includes(tag) ? 'active' : ''}" 
-                    data-tag="${tag}">
+                    data-tag="${tag}"
+                    aria-pressed="${activeFilters.includes(tag)}">
                 ${tag} <span class="count">${count}</span>
             </button>
         `).join('');
@@ -1370,6 +1384,9 @@
 
     function switchToSectionView() {
         isFilteredView = false;
+        isTagsExpanded = false;
+        document.getElementById('filterTags').classList.remove('expanded');
+        document.getElementById('filterTagsToggle').textContent = '更多 ▼';
         
         // 显示所有栏目
         document.querySelectorAll('.section').forEach(s => s.style.display = '');
@@ -1385,13 +1402,34 @@
         const sections = document.querySelectorAll('.section');
         const navItems = document.querySelectorAll('.nav-item');
         let currentSection = null;
+        let maxVisibleArea = 0;
         
+        // 找到在视口中可见面积最大的区块
         sections.forEach(section => {
             const rect = section.getBoundingClientRect();
-            if (rect.top <= 200) {
+            const viewportHeight = window.innerHeight;
+            
+            // 计算可见区域
+            const visibleTop = Math.max(0, rect.top);
+            const visibleBottom = Math.min(viewportHeight, rect.bottom);
+            const visibleHeight = Math.max(0, visibleBottom - visibleTop);
+            
+            // 优先选择顶部在视口上方的区块，且可见面积最大的
+            if (rect.top <= 150 && visibleHeight > maxVisibleArea) {
+                maxVisibleArea = visibleHeight;
                 currentSection = section;
             }
         });
+        
+        // 如果没有找到合适的（比如在页面底部），选择最后一个可见的
+        if (!currentSection) {
+            sections.forEach(section => {
+                const rect = section.getBoundingClientRect();
+                if (rect.top <= window.innerHeight && rect.bottom >= 0) {
+                    currentSection = section;
+                }
+            });
+        }
         
         navItems.forEach(item => {
             const isActive = currentSection && item.dataset.section === currentSection.dataset.section;
@@ -1401,11 +1439,24 @@
 
     // ==================== 事件处理 ====================
     function toggleFilter(tag) {
-        const idx = activeFilters.indexOf(tag);
-        if (idx === -1) {
-            activeFilters.push(tag);
+        if (filterMode === 'ONLY') {
+            // ONLY 模式：单选逻辑
+            const idx = activeFilters.indexOf(tag);
+            if (idx === -1) {
+                // 选中新标签，替换所有已选标签
+                activeFilters = [tag];
+            } else {
+                // 再次点击已选中的标签，取消选择
+                activeFilters = [];
+            }
         } else {
-            activeFilters.splice(idx, 1);
+            // AND/OR 模式：多选逻辑
+            const idx = activeFilters.indexOf(tag);
+            if (idx === -1) {
+                activeFilters.push(tag);
+            } else {
+                activeFilters.splice(idx, 1);
+            }
         }
         renderFilterTags();
         applyFilters();
@@ -1421,10 +1472,20 @@
     }
 
     function switchFilterMode(mode) {
+        const oldMode = filterMode;
         filterMode = mode;
+        
+        // 更新按钮样式
         document.querySelectorAll('.filter-mode-btn').forEach(btn => {
             btn.classList.toggle('active', btn.dataset.mode === mode);
         });
+        
+        // 从 AND/OR 切换到 ONLY 时，如果有多选标签，只保留最后一个
+        if (mode === 'ONLY' && oldMode !== 'ONLY' && activeFilters.length > 1) {
+            activeFilters = [activeFilters[activeFilters.length - 1]];
+            renderFilterTags();
+        }
+        
         applyFilters();
     }
 
@@ -1434,7 +1495,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h3>${title}</h3>
-                        <button class="modal-close" onclick="closeModal()">&times;</button>
+                        <button class="modal-close" onclick="closeModal()" aria-label="关闭弹窗">&times;</button>
                     </div>
                     <div class="modal-body">
                         <div class="modal-prompt">
@@ -1496,8 +1557,31 @@
         if (modal) modal.remove();
     }
 
+    function showAboutModal() {
+        const modalHtml = `
+            <div class="modal-overlay" id="modalOverlay">
+                <div class="modal-content" style="max-width: 450px;">
+                    <div class="modal-header">
+                        <h3>关于 AI提质增效工具集</h3>
+                        <button class="modal-close" aria-label="关闭弹窗" onclick="closeModal()">&times;</button>
+                    </div>
+                    <div class="modal-body" style="text-align: center; padding: 30px 24px;">
+                        <p style="font-size: 1rem; color: var(--text-main); margin-bottom: 12px;">本工具集均为国内环境可用</p>
+                        <p style="font-size: 0.9rem; color: var(--text-muted);">最后更新：2026.04.20</p>
+                    </div>
+                </div>
+            </div>
+        `;
+        document.body.insertAdjacentHTML('beforeend', modalHtml);
+        document.getElementById('modalOverlay').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+    }
+
     // ==================== 初始化 ====================
     function init() {
+        renderNavbar();
+        renderSections();
         renderFilterTags();
         applyFilters();
         
@@ -1558,6 +1642,16 @@
             switchToSectionView();
         });
         
+        // 标签展开/折叠
+        const filterTagsToggle = document.getElementById('filterTagsToggle');
+        const filterTags = document.getElementById('filterTags');
+        
+        filterTagsToggle.addEventListener('click', () => {
+            isTagsExpanded = !isTagsExpanded;
+            filterTags.classList.toggle('expanded', isTagsExpanded);
+            filterTagsToggle.textContent = isTagsExpanded ? '收起 ▲' : '更多 ▼';
+        });
+        
         // 弹窗按钮
         document.querySelectorAll('.modal-btn').forEach(btn => {
             btn.addEventListener('click', function() {
@@ -1566,7 +1660,12 @@
                 showModal(title, prompt);
             });
         });
-        
+
+        // 关于按钮
+        document.getElementById('aboutBtn').addEventListener('click', () => {
+            showAboutModal();
+        });
+
         // 键盘快捷键
         document.addEventListener('keydown', (e) => {
             if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
